@@ -7,8 +7,19 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="assets/styles/styles.css">
+    
 </head>
-<body>
+<body class="preloader-active">
+
+    <!-- Preloader -->
+    <div id="preloader">
+        <img src="assets/images/logo-20-282-29.jpg" class="logo" alt="Logo">
+        <div class="progress-wrapper">
+            <div id="progress-bar"></div>
+        </div>
+    </div>
+
+
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top border-bottom" id="navbar">
         <div class="container-lg">
@@ -39,7 +50,7 @@
     </nav>
 
     <!-- Hero Section -->
-    <section class="hero-section py-5 py-md-6 overflow-hidden position-relative">
+    <section class="hero-section py-5 py-md-6 overflow-hidden position-relative  ">
         <div class="position-absolute top-0 end-0 w-50 h-50 bg-primary opacity-10 rounded-circle blur-3xl"></div>
         <div class="position-absolute bottom-0 start-0 w-75 h-75 bg-primary opacity-5 rounded-circle blur-3xl"></div>
         
@@ -72,7 +83,7 @@
     </section>
 
     <!-- Product Highlights -->
-    <section class="py-5 py-md-6 bg-light" id="products">
+    <section class="py-5 py-md-6 bg-light  " id="products">
         <div class="container-lg">
             <div class="text-center mb-5 fade-in-down">
                 <h2 class="display-5 fw-bold mb-3">Our Product Categories</h2>
@@ -144,7 +155,7 @@
     </section>
 
     <!-- Why Choose Us -->
-    <section class="py-5 py-md-6 bg-light-gray" id="quality">
+    <section class="py-5 py-md-6 bg-light-gray  " id="quality">
         <div class="container-lg">
             <div class="text-center mb-5 fade-in-down">
                 <h2 class="display-5 fw-bold mb-3">Why Choose Mayur Colour</h2>
@@ -250,6 +261,6 @@
     </footer>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-    <script src="script.js"></script>
+    <script src="assets/js/preloader.js"></script>
 </body>
 </html>

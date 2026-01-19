@@ -322,6 +322,64 @@ body {
   color: rgba(255, 255, 255, 0.5);
 }
 
+
+/* Preloader */
+#preloader {
+    position: fixed;
+    inset: 0;
+    background: #ffffff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    transition: opacity 0.4s ease;
+}
+
+.logo {
+    width: 280px;
+}
+
+/* Progress container */
+.progress-wrapper {
+    width: 350px;
+    height: 15px;
+    background: #eaeaea;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-top: 25px;
+}
+
+/* Progress bar */
+#progress-bar {
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        #00a8cc,
+        #2ec4b6,
+        #00a8cc,
+        #2ec4b6
+    );
+    background-size: 300% 100%;
+    animation: gradientMove 1.2s linear infinite;
+    transition: width 0.2s linear;
+}
+
+@keyframes gradientMove {
+    from { background-position: 0% 50%; }
+    to { background-position: 100% 50%; }
+}
+
+/* Pause all animations while preloader is active */
+.preloader-active * {
+    animation-play-state: paused !important;
+    transition: none !important;
+}
+
+
+
+
 /* Hero Section */
 .hero-section {
   background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
