@@ -20,242 +20,9 @@
         rel="stylesheet">
     <!-- Mayur Colour Admin Styles -->
     <link href="assets/css/styles.css" rel="stylesheet">
-
-    <!-- Custom Responsive Styles -->
-    <style>
-        /* Mobile-first responsive design */
-        @media (max-width: 768px) {
-            .content-area {
-                padding: 1rem !important;
-            }
-
-            .main-content {
-                margin-left: 0 !important;
-            }
-
-            .sidebar {
-                transform: translateX(-100%);
-                transition: transform 0.3s ease;
-                z-index: 1050;
-            }
-
-            .sidebar.show {
-                transform: translateX(0);
-            }
-
-            .sidebar-overlay {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0, 0, 0, 0.5);
-                z-index: 1040;
-                display: none;
-            }
-
-            .sidebar-overlay.show {
-                display: block;
-            }
-
-            /* Mobile header adjustments */
-            .mobile-header {
-                flex-direction: column;
-                gap: 1rem;
-            }
-
-            .mobile-header h2 {
-                font-size: 1.5rem;
-            }
-
-            /* Mobile search adjustments */
-            .mobile-search-row {
-                flex-direction: column;
-            }
-
-            .mobile-search-row .col-md-8,
-            .mobile-search-row .col-md-4 {
-                width: 100%;
-                margin-bottom: 1rem;
-            }
-
-            /* Mobile button adjustments */
-            .mobile-buttons {
-                flex-direction: column;
-                gap: 0.5rem;
-            }
-
-            .mobile-buttons .btn {
-                width: 100%;
-                justify-content: center;
-            }
-
-            /* Mobile table - Card view */
-            .mobile-table-card {
-                display: block;
-            }
-
-            .desktop-table {
-                display: none;
-            }
-
-            .product-card {
-                border: 1px solid #dee2e6;
-                border-radius: 0.375rem;
-                margin-bottom: 1rem;
-                padding: 1rem;
-                background: white;
-            }
-
-            .product-card-header {
-                display: flex;
-                justify-content: space-between;
-                align-items: flex-start;
-                margin-bottom: 0.75rem;
-            }
-
-            .product-card-title {
-                font-weight: 600;
-                font-size: 1.1rem;
-                margin: 0;
-                flex: 1;
-            }
-
-            .product-card-id {
-                background: #f8f9fa;
-                padding: 0.25rem 0.5rem;
-                border-radius: 0.25rem;
-                font-size: 0.875rem;
-                color: #6c757d;
-                margin-left: 0.5rem;
-            }
-
-            .product-card-body {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 0.75rem;
-                margin-bottom: 1rem;
-            }
-
-            .product-card-field {
-                display: flex;
-                flex-direction: column;
-            }
-
-            .product-card-label {
-                font-size: 0.75rem;
-                color: #6c757d;
-                text-transform: uppercase;
-                letter-spacing: 0.05em;
-                margin-bottom: 0.25rem;
-            }
-
-            .product-card-value {
-                font-size: 0.9rem;
-                font-weight: 500;
-            }
-
-            .product-card-color {
-                display: flex;
-                align-items: center;
-                gap: 0.5rem;
-            }
-
-            .product-card-actions {
-                display: flex;
-                gap: 0.5rem;
-                justify-content: flex-end;
-                padding-top: 0.75rem;
-                border-top: 1px solid #dee2e6;
-            }
-
-            /* Mobile pagination */
-            .mobile-pagination {
-                flex-direction: column;
-                gap: 1rem;
-                text-align: center;
-            }
-
-            .pagination {
-                justify-content: center;
-            }
-
-            /* Mobile modal adjustments */
-            .modal-dialog {
-                margin: 0.5rem;
-                max-width: calc(100% - 1rem);
-            }
-
-            .modal-body {
-                padding: 1rem;
-            }
-
-            .color-controls-mobile {
-                flex-direction: column;
-                align-items: stretch !important;
-                gap: 0.75rem !important;
-            }
-
-            .color-controls-mobile .form-control {
-                width: 100% !important;
-            }
-
-            .color-controls-mobile .color-preview {
-                width: 100% !important;
-                height: 40px !important;
-            }
-        }
-
-        /* Tablet adjustments */
-        @media (min-width: 769px) and (max-width: 1024px) {
-            .content-area {
-                padding: 1.5rem;
-            }
-
-            .tablet-table th,
-            .tablet-table td {
-                padding: 0.5rem;
-                font-size: 0.9rem;
-            }
-
-            .tablet-buttons {
-                flex-wrap: wrap;
-                gap: 0.5rem;
-            }
-        }
-
-        /* Desktop view */
-        @media (min-width: 769px) {
-            .mobile-table-card {
-                display: none;
-            }
-
-            .desktop-table {
-                display: block;
-            }
-        }
-
-        /* Touch-friendly buttons */
-        .btn-touch {
-            min-height: 44px;
-            min-width: 44px;
-        }
-
-        /* Improved color preview for mobile */
-        .color-swatch-mobile {
-            width: 40px;
-            height: 24px;
-            border-radius: 4px;
-            border: 1px solid #ccc;
-            display: inline-block;
-        }
-    </style>
 </head>
 
 <body>
-    <!-- Sidebar Overlay for Mobile -->
-    <div class="sidebar-overlay" id="sidebarOverlay"></div>
-
     <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
@@ -322,39 +89,36 @@
 
         <!-- Products Content -->
         <div class="content-area">
-            <!-- Header - Responsive -->
-            <div class="d-flex justify-content-between align-items-center mb-4 mobile-header">
+            <div class="d-flex justify-content-between align-items-center mb-4">
                 <h2 class="mb-0">Product Management</h2>
-                <button class="btn btn-primary btn-touch" data-bs-toggle="modal" data-bs-target="#addProductModal">
-                    <i class="bi bi-plus-circle me-2"></i>
-                    <span>Add New Product</span>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addProductModal">
+                    <i class="bi bi-plus-circle me-2"></i>Add New Product
                 </button>
             </div>
 
-            <!-- Search Filter - Responsive -->
+            <!-- Search Filter -->
             <div class="card border-0 shadow-sm mb-4">
                 <div class="card-body">
-                    <div class="row g-3 mobile-search-row">
+                    <div class="row g-3">
                         <div class="col-md-8">
                             <label class="form-label">Search Products</label>
                             <div class="input-group">
-                                <input type="text" class="form-control" placeholder="Search products..."
+                                <input type="text" class="form-control"
+                                    placeholder="Search products by name, CAS number, or generic name..."
                                     id="searchInput">
-                                <button class="btn btn-outline-secondary btn-touch" type="button">
+                                <button class="btn btn-outline-secondary" type="button">
                                     <i class="bi bi-search"></i>
                                 </button>
                             </div>
                         </div>
                         <div class="col-md-4">
-                            <label class="form-label d-none d-md-block">&nbsp;</label>
-                            <div class="d-flex gap-2 mobile-buttons">
-                                <button class="btn btn-outline-secondary btn-touch" id="resetFilters">
-                                    <i class="bi bi-arrow-clockwise me-1"></i>
-                                    <span>Reset</span>
+                            <label class="form-label">&nbsp;</label>
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-outline-secondary" id="resetFilters">
+                                    <i class="bi bi-arrow-clockwise me-1"></i>Reset
                                 </button>
-                                <button class="btn btn-outline-primary btn-touch" id="exportProducts">
-                                    <i class="bi bi-download me-1"></i>
-                                    <span>Export</span>
+                                <button class="btn btn-outline-primary" id="exportProducts">
+                                    <i class="bi bi-download me-1"></i>Export
                                 </button>
                             </div>
                         </div>
@@ -362,23 +126,23 @@
                 </div>
             </div>
 
-            <!-- Desktop Table View -->
-            <div class="card border-0 shadow-sm desktop-table">
+            <!-- Products Table -->
+            <div class="card border-0 shadow-sm">
                 <div class="card-body p-0">
                     <div class="table-responsive">
-                        <table class="table table-hover mb-0 tablet-table" id="productsTable">
+                        <table class="table table-hover mb-0" id="productsTable">
                             <thead class="table-light">
                                 <tr>
                                     <th scope="col" class="border-0 ps-4">ID</th>
                                     <th scope="col" class="border-0">Product Name</th>
                                     <th scope="col" class="border-0">Category</th>
                                     <th scope="col" class="border-0">Color Shade</th>
-                                    <th scope="col" class="border-0 d-none d-lg-table-cell">CI Generic Name</th>
-                                    <th scope="col" class="border-0 d-none d-xl-table-cell">CAS Number</th>
+                                    <th scope="col" class="border-0">CI Generic Name</th>
+                                    <th scope="col" class="border-0">CAS Number</th>
                                     <th scope="col" class="border-0 text-center">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody id="productsTableBody">
+                            <tbody>
                                 <!-- Products will be dynamically loaded here -->
                             </tbody>
                         </table>
@@ -386,16 +150,11 @@
                 </div>
             </div>
 
-            <!-- Mobile Card View -->
-            <div class="mobile-table-card" id="mobileProductsContainer">
-                <!-- Mobile cards will be dynamically loaded here -->
-            </div>
-
-            <!-- Pagination Controls - Responsive -->
-            <div class="d-flex justify-content-between align-items-center mt-4 mobile-pagination">
+            <!-- Pagination Controls -->
+            <div class="d-flex justify-content-between align-items-center mt-4">
                 <!-- Items per page selector -->
                 <div class="d-flex align-items-center">
-                    <label class="form-label me-2 mb-0 d-none d-sm-inline">Show:</label>
+                    <label class="form-label me-2 mb-0">Show:</label>
                     <select class="form-select form-select-sm" id="itemsPerPage" style="width: auto;">
                         <option value="5">5</option>
                         <option value="10" selected>10</option>
@@ -409,19 +168,13 @@
                 <nav aria-label="Products pagination">
                     <ul class="pagination mb-0" id="paginationControls">
                         <li class="page-item disabled">
-                            <a class="page-link" href="#" tabindex="-1" id="prevPage">
-                                <span class="d-none d-sm-inline">Previous</span>
-                                <i class="bi bi-chevron-left d-sm-none"></i>
-                            </a>
+                            <a class="page-link" href="#" tabindex="-1" id="prevPage">Previous</a>
                         </li>
                         <li class="page-item active">
                             <a class="page-link" href="#" id="page1">1</a>
                         </li>
                         <li class="page-item">
-                            <a class="page-link" href="#" id="nextPage">
-                                <span class="d-none d-sm-inline">Next</span>
-                                <i class="bi bi-chevron-right d-sm-none"></i>
-                            </a>
+                            <a class="page-link" href="#" id="nextPage">Next</a>
                         </li>
                     </ul>
                 </nav>
@@ -484,7 +237,7 @@
                             <div class="col-md-12">
                                 <div class="mb-3">
                                     <label class="form-label">Color Shade *</label>
-                                    <div class="d-flex align-items-center gap-3 color-controls-mobile">
+                                    <div class="d-flex align-items-center gap-3">
                                         <input type="color" class="form-control form-control-color"
                                             id="productColorShade" value="#FFFFFF" style="width: 60px;">
                                         <div class="color-preview" id="colorPreview"
@@ -492,8 +245,7 @@
                                         </div>
                                         <input type="text" class="form-control" id="colorHexInput" value="#FFFFFF"
                                             style="width: 100px;" placeholder="#FFFFFF">
-                                        <small class="text-muted d-none d-sm-inline">Select or enter the product
-                                            color</small>
+                                        <small class="text-muted">Select or enter the product color</small>
                                     </div>
                                 </div>
                             </div>
@@ -518,6 +270,8 @@
 
     <!-- Bootstrap 5 JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Fixed Admin JS -->
+    <script src="assets/js/admin-fixed.js"></script>
     <!-- Products Data and Logic -->
     <script src="assets/js/products.js"></script>
 </body>

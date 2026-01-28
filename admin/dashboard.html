@@ -1,27 +1,204 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Mayur Colour Admin">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#0891b2">
     <title>Dashboard - Mayur Colour Admin</title>
-    
+
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
     <!-- Mayur Colour Admin Styles -->
     <link href="assets/css/styles.css" rel="stylesheet">
+    
+    <!-- Custom Responsive Styles for Dashboard -->
+    <style>
+        /* Mobile-first responsive design */
+        @media (max-width: 768px) {
+            .content-area {
+                padding: 1rem !important;
+            }
+            
+            .main-content {
+                margin-left: 0 !important;
+            }
+            
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+                z-index: 1050;
+            }
+            
+            .sidebar.show {
+                transform: translateX(0);
+            }
+            
+            .sidebar-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 1040;
+                display: none;
+            }
+            
+            .sidebar-overlay.show {
+                display: block;
+            }
+            
+            /* Mobile dashboard header */
+            .dashboard-header {
+                flex-direction: column;
+                align-items: flex-start !important;
+                gap: 0.5rem;
+            }
+            
+            .dashboard-header h2 {
+                font-size: 1.5rem !important;
+            }
+            
+            .dashboard-date {
+                font-size: 0.875rem;
+            }
+            
+            /* Mobile stats cards */
+            .stats-card {
+                margin-bottom: 1rem;
+            }
+            
+            .stats-card .card-body {
+                padding: 2rem 1rem !important;
+            }
+            
+            .stats-card .stats-icon {
+                width: 60px !important;
+                height: 60px !important;
+            }
+            
+            .stats-card .stats-icon i {
+                font-size: 1.5rem !important;
+            }
+            
+            .stats-card .stats-number {
+                font-size: 2rem !important;
+            }
+            
+            .stats-card .stats-label {
+                font-size: 1rem !important;
+            }
+            
+            /* Mobile category breakdown */
+            .category-breakdown-mobile {
+                padding: 1rem;
+            }
+            
+            .category-item-mobile {
+                flex-direction: column;
+                align-items: flex-start !important;
+                padding: 1rem;
+                border: 1px solid #dee2e6;
+                border-radius: 0.5rem;
+                margin-bottom: 1rem;
+                background: #f8f9fa;
+            }
+            
+            .category-info-mobile {
+                width: 100%;
+                margin-bottom: 0.75rem;
+            }
+            
+            .category-stats-mobile {
+                width: 100%;
+            }
+            
+            .category-progress-mobile {
+                width: 100% !important;
+                height: 8px !important;
+                margin-top: 0.5rem;
+            }
+        }
+        
+        /* Tablet adjustments */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .content-area {
+                padding: 1.5rem;
+            }
+            
+            .stats-card .card-body {
+                padding: 3rem 1.5rem !important;
+            }
+            
+            .stats-card .stats-icon {
+                width: 70px !important;
+                height: 70px !important;
+            }
+            
+            .stats-card .stats-number {
+                font-size: 2.5rem !important;
+            }
+        }
+        
+        /* Touch-friendly buttons */
+        .btn-touch {
+            min-height: 44px;
+            min-width: 44px;
+        }
+        
+        /* Responsive grid adjustments */
+        @media (max-width: 576px) {
+            .stats-cards-mobile .col-xl-4 {
+                margin-bottom: 1rem;
+            }
+        }
+        
+        /* Enhanced mobile category breakdown */
+        .category-color-indicator-mobile {
+            width: 24px !important;
+            height: 24px !important;
+            margin-right: 1rem !important;
+        }
+        
+        .category-name-mobile {
+            font-size: 1.1rem !important;
+            font-weight: 600 !important;
+        }
+        
+        .category-count-mobile {
+            font-size: 0.9rem !important;
+            color: #6c757d !important;
+        }
+        
+        .category-percentage-mobile {
+            font-size: 1.2rem !important;
+            font-weight: 700 !important;
+            color: #2c3e50 !important;
+        }
+    </style>
 </head>
+
 <body>
+    <!-- Sidebar Overlay for Mobile -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
     <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <h4 class="text-white mb-0">Mayur Colour</h4>
             <small class="text-light opacity-75">Admin Panel</small>
         </div>
-        
+
         <nav class="sidebar-nav">
             <ul class="nav flex-column">
                 <li class="nav-item">
@@ -37,27 +214,9 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="usermanagement.html">
-                        <i class="bi bi-people"></i>
-                        User Management
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#orders">
-                        <i class="bi bi-cart3"></i>
-                        Orders
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#analytics">
-                        <i class="bi bi-graph-up"></i>
-                        Analytics
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#settings">
-                        <i class="bi bi-gear"></i>
-                        Settings
+                    <a class="nav-link" href="category.html">
+                        <i class="bi bi-tags"></i>
+                        Categories
                     </a>
                 </li>
             </ul>
@@ -72,10 +231,11 @@
                 <button class="btn btn-outline-secondary me-3" id="sidebarToggle">
                     <i class="bi bi-list"></i>
                 </button>
-                
+
                 <div class="navbar-nav ms-auto">
                     <div class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button"
+                            data-bs-toggle="dropdown">
                             <div class="avatar bg-primary text-white rounded-circle me-2">
                                 <i class="bi bi-person-fill"></i>
                             </div>
@@ -84,8 +244,11 @@
                         <ul class="dropdown-menu dropdown-menu-end">
                             <li><a class="dropdown-item" href="#"><i class="bi bi-person me-2"></i>Profile</a></li>
                             <li><a class="dropdown-item" href="#"><i class="bi bi-gear me-2"></i>Settings</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="#"><i class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-box-arrow-right me-2"></i>Logout</a>
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -94,236 +257,64 @@
 
         <!-- Dashboard Content -->
         <div class="content-area">
-            <div class="d-flex justify-content-between align-items-center mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-4 dashboard-header">
                 <h2 class="mb-0">Dashboard</h2>
-                <div class="text-muted">
+                <div class="text-muted dashboard-date">
                     <i class="bi bi-calendar3"></i>
                     <span id="currentDate"></span>
                 </div>
             </div>
 
             <!-- Stats Cards -->
-            <div class="row mb-4">
-                <div class="col-xl-3 col-md-6 mb-4">
-                    <div class="card stats-card border-0 shadow-sm">
-                        <div class="card-body">
-                            <div class="d-flex align-items-center">
-                                <div class="stats-icon bg-primary">
-                                    <i class="bi bi-palette text-white"></i>
-                                </div>
-                                <div class="ms-3">
-                                    <div class="stats-number">248</div>
-                                    <div class="stats-label">Total Products</div>
-                                </div>
+            <div class="row justify-content-center stats-cards-mobile">
+                <div class="col-12 col-sm-6 col-xl-4 col-lg-6 col-md-8 mb-4">
+                    <div class="card stats-card border-0 shadow-sm h-100">
+                        <div class="card-body text-center py-5">
+                            <div class="stats-icon bg-primary mx-auto mb-3" style="width: 80px; height: 80px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
+                                <i class="bi bi-palette text-white" style="font-size: 2rem;"></i>
+                            </div>
+                            <div class="stats-number mb-2" style="font-size: 3rem; font-weight: 700; color: #2c3e50;" id="totalProducts">0</div>
+                            <div class="stats-label" style="font-size: 1.1rem; color: #6c757d; font-weight: 500;">Total Products</div>
+                            <div class="mt-3">
+                                <a href="products.html" class="btn btn-outline-primary btn-sm btn-touch">
+                                    <i class="bi bi-arrow-right me-1"></i><span class="d-none d-sm-inline">View </span>Products
+                                </a>
                             </div>
                         </div>
                     </div>
                 </div>
-                
-                <div class="col-xl-3 col-md-6 mb-4">
-                    <div class="card stats-card border-0 shadow-sm">
-                        <div class="card-body">
-                            <div class="d-flex align-items-center">
-                                <div class="stats-icon bg-success">
-                                    <i class="bi bi-circle-fill text-white"></i>
-                                </div>
-                                <div class="ms-3">
-                                    <div class="stats-number">1,247</div>
-                                    <div class="stats-label">Shade Variants</div>
-                                </div>
+
+                <div class="col-12 col-sm-6 col-xl-4 col-lg-6 col-md-8 mb-4">
+                    <div class="card stats-card border-0 shadow-sm h-100">
+                        <div class="card-body text-center py-5">
+                            <div class="stats-icon bg-success mx-auto mb-3" style="width: 80px; height: 80px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
+                                <i class="bi bi-tags text-white" style="font-size: 2rem;"></i>
                             </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="col-xl-3 col-md-6 mb-4">
-                    <div class="card stats-card border-0 shadow-sm">
-                        <div class="card-body">
-                            <div class="d-flex align-items-center">
-                                <div class="stats-icon bg-warning">
-                                    <i class="bi bi-cart3 text-white"></i>
-                                </div>
-                                <div class="ms-3">
-                                    <div class="stats-number">89</div>
-                                    <div class="stats-label">Pending Orders</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="col-xl-3 col-md-6 mb-4">
-                    <div class="card stats-card border-0 shadow-sm">
-                        <div class="card-body">
-                            <div class="d-flex align-items-center">
-                                <div class="stats-icon bg-info">
-                                    <i class="bi bi-people text-white"></i>
-                                </div>
-                                <div class="ms-3">
-                                    <div class="stats-number">1,456</div>
-                                    <div class="stats-label">Active Customers</div>
-                                </div>
+                            <div class="stats-number mb-2" style="font-size: 3rem; font-weight: 700; color: #2c3e50;" id="totalCategories">0</div>
+                            <div class="stats-label" style="font-size: 1.1rem; color: #6c757d; font-weight: 500;">Product Categories</div>
+                            <div class="mt-3">
+                                <a href="category.html" class="btn btn-outline-success btn-sm btn-touch">
+                                    <i class="bi bi-arrow-right me-1"></i><span class="d-none d-sm-inline">View </span>Categories
+                                </a>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Recent Activity -->
-            <div class="row">
-                <div class="col-lg-8">
+            <!-- Category Breakdown -->
+            <div class="row justify-content-center mt-4">
+                <div class="col-12 col-xl-8 col-lg-10">
                     <div class="card border-0 shadow-sm">
-                        <div class="card-header bg-white">
-                            <h5 class="mb-0">Recent Products</h5>
+                        <div class="card-header bg-white border-bottom">
+                            <h5 class="mb-0">
+                                <i class="bi bi-pie-chart me-2"></i>
+                                Category Breakdown
+                            </h5>
                         </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th>Product</th>
-                                            <th>Shades</th>
-                                            <th>Category</th>
-                                            <th>Status</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    <div class="shade-preview me-3">
-                                                        <div class="shade-swatch" style="background-color: #FF6B6B;" data-bs-toggle="tooltip" title="Crimson Red - CR001"></div>
-                                                        <div class="shade-swatch" style="background-color: #4ECDC4;" data-bs-toggle="tooltip" title="Teal Blue - TB002"></div>
-                                                        <div class="shade-swatch" style="background-color: #45B7D1;" data-bs-toggle="tooltip" title="Sky Blue - SB003"></div>
-                                                    </div>
-                                                    <div>
-                                                        <div class="fw-medium">Premium Wall Paint</div>
-                                                        <small class="text-muted">PWP-2024-001</small>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td><span class="badge bg-light text-dark">12 shades</span></td>
-                                            <td>Interior Paint</td>
-                                            <td><span class="badge bg-success">Active</span></td>
-                                            <td>
-                                                <button class="btn btn-sm btn-outline-primary me-1" data-bs-toggle="tooltip" title="View">
-                                                    <i class="bi bi-eye"></i>
-                                                </button>
-                                                <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="tooltip" title="Edit">
-                                                    <i class="bi bi-pencil"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    <div class="shade-preview me-3">
-                                                        <div class="shade-swatch" style="background-color: #2C3E50;" data-bs-toggle="tooltip" title="Charcoal Grey - CG007"></div>
-                                                        <div class="shade-swatch" style="background-color: #34495E;" data-bs-toggle="tooltip" title="Slate Blue - SB008"></div>
-                                                        <div class="shade-swatch" style="background-color: #7F8C8D;" data-bs-toggle="tooltip" title="Steel Grey - SG009"></div>
-                                                    </div>
-                                                    <div>
-                                                        <div class="fw-medium">Exterior Weather Shield</div>
-                                                        <small class="text-muted">EWS-2024-002</small>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td><span class="badge bg-light text-dark">8 shades</span></td>
-                                            <td>Exterior Paint</td>
-                                            <td><span class="badge bg-success">Active</span></td>
-                                            <td>
-                                                <button class="btn btn-sm btn-outline-primary me-1" data-bs-toggle="tooltip" title="View">
-                                                    <i class="bi bi-eye"></i>
-                                                </button>
-                                                <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="tooltip" title="Edit">
-                                                    <i class="bi bi-pencil"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    <div class="shade-preview me-3">
-                                                        <div class="shade-swatch" style="background-color: #8B4513;" data-bs-toggle="tooltip" title="Rustic Brown - RB013"></div>
-                                                        <div class="shade-swatch" style="background-color: #D2691E;" data-bs-toggle="tooltip" title="Terracotta - TC014"></div>
-                                                        <div class="shade-swatch" style="background-color: #CD853F;" data-bs-toggle="tooltip" title="Sandy Beige - SB015"></div>
-                                                    </div>
-                                                    <div>
-                                                        <div class="fw-medium">Texture Master Pro</div>
-                                                        <small class="text-muted">TMP-2024-003</small>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td><span class="badge bg-light text-dark">8 shades</span></td>
-                                            <td>Texture Paint</td>
-                                            <td><span class="badge bg-warning text-dark">Draft</span></td>
-                                            <td>
-                                                <button class="btn btn-sm btn-outline-primary me-1" data-bs-toggle="tooltip" title="View">
-                                                    <i class="bi bi-eye"></i>
-                                                </button>
-                                                <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="tooltip" title="Edit">
-                                                    <i class="bi bi-pencil"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="col-lg-4">
-                    <div class="card border-0 shadow-sm">
-                        <div class="card-header bg-white">
-                            <h5 class="mb-0">Popular Shades</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="popular-shade-item">
-                                <div class="d-flex align-items-center mb-3">
-                                    <div class="shade-swatch large me-3" style="background-color: #FF6B6B;"></div>
-                                    <div class="flex-grow-1">
-                                        <div class="fw-medium">Crimson Red</div>
-                                        <small class="text-muted">CR001 • 234 orders</small>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="popular-shade-item">
-                                <div class="d-flex align-items-center mb-3">
-                                    <div class="shade-swatch large me-3" style="background-color: #4ECDC4;"></div>
-                                    <div class="flex-grow-1">
-                                        <div class="fw-medium">Teal Blue</div>
-                                        <small class="text-muted">TB002 • 189 orders</small>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="popular-shade-item">
-                                <div class="d-flex align-items-center mb-3">
-                                    <div class="shade-swatch large me-3" style="background-color: #96CEB4;"></div>
-                                    <div class="flex-grow-1">
-                                        <div class="fw-medium">Mint Green</div>
-                                        <small class="text-muted">MG003 • 156 orders</small>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="popular-shade-item">
-                                <div class="d-flex align-items-center mb-3">
-                                    <div class="shade-swatch large me-3" style="background-color: #2C3E50;"></div>
-                                    <div class="flex-grow-1">
-                                        <div class="fw-medium">Charcoal Grey</div>
-                                        <small class="text-muted">CG007 • 142 orders</small>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="popular-shade-item">
-                                <div class="d-flex align-items-center mb-3">
-                                    <div class="shade-swatch large me-3" style="background-color: #8B4513;"></div>
-                                    <div class="flex-grow-1">
-                                        <div class="fw-medium">Rustic Brown</div>
-                                        <small class="text-muted">RB013 • 128 orders</small>
-                                    </div>
-                                </div>
+                        <div class="card-body category-breakdown-mobile">
+                            <div id="categoryBreakdown">
+                                <!-- Category breakdown will be loaded here -->
                             </div>
                         </div>
                     </div>
@@ -334,7 +325,208 @@
 
     <!-- Bootstrap 5 JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Consolidated Admin JS -->
-    <script src="assets/js/admin.js"></script>
+    <!-- Fixed Admin JS -->
+    <script src="assets/js/admin-fixed.js"></script>
+    <!-- Dashboard JS -->
+    <script>
+        // Function to set current date
+        function setCurrentDate() {
+            const now = new Date();
+            const options = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            };
+            document.getElementById('currentDate').textContent = now.toLocaleDateString('en-US', options);
+        }
+
+        // Function to load dashboard data
+        async function loadDashboardData() {
+            try {
+                // Import products data (simulating the data from products.js)
+                const products = [
+                    { id: 1, name: "Titanium Dioxide White", category: "deys", colorShade: "#FFFFFF", ciGenericName: "Titanium Dioxide", casNumber: "13463-67-7" },
+                    { id: 2, name: "Iron Oxide Red", category: "pigments", colorShade: "#CD5C5C", ciGenericName: "Iron Oxide", casNumber: "1309-37-1" },
+                    { id: 3, name: "Ultramarine Blue", category: "pigments", colorShade: "#4169E1", ciGenericName: "Ultramarine", casNumber: "57455-37-5" },
+                    { id: 4, name: "Chrome Yellow", category: "pigments", colorShade: "#FFD700", ciGenericName: "Lead Chromate", casNumber: "7758-97-6" },
+                    { id: 5, name: "Carbon Black", category: "pigments", colorShade: "#000000", ciGenericName: "Carbon Black", casNumber: "1333-86-4" },
+                    { id: 6, name: "Phthalocyanine Green", category: "deys", colorShade: "#00FF7F", ciGenericName: "Copper Phthalocyanine", casNumber: "1328-53-6" },
+                    { id: 7, name: "Cadmium Orange", category: "pigments", colorShade: "#FF8C00", ciGenericName: "Cadmium Selenide", casNumber: "1306-24-7" },
+                    { id: 8, name: "Quinacridone Violet", category: "colorants", colorShade: "#8B008B", ciGenericName: "Quinacridone", casNumber: "1047-16-1" },
+                    { id: 9, name: "Zinc Oxide White", category: "additives", colorShade: "#F8F8FF", ciGenericName: "Zinc Oxide", casNumber: "1314-13-2" },
+                    { id: 10, name: "Prussian Blue", category: "deys", colorShade: "#003153", ciGenericName: "Iron Hexacyanoferrate", casNumber: "14038-43-8" },
+                    { id: 11, name: "Vermillion Red", category: "pigments", colorShade: "#E34234", ciGenericName: "Mercury Sulfide", casNumber: "1344-48-5" },
+                    { id: 12, name: "Cobalt Blue", category: "colorants", colorShade: "#0047AB", ciGenericName: "Cobalt Aluminate", casNumber: "1345-16-0" },
+                    { id: 13, name: "Chromium Green", category: "pigments", colorShade: "#50C878", ciGenericName: "Chromium Oxide", casNumber: "1308-38-9" },
+                    { id: 14, name: "Alizarin Crimson", category: "deys", colorShade: "#E32636", ciGenericName: "Alizarin", casNumber: "72-48-0" },
+                    { id: 15, name: "Burnt Sienna", category: "colorants", colorShade: "#A0522D", ciGenericName: "Iron Oxide", casNumber: "51274-00-1" }
+                ];
+
+                // Calculate total products
+                const totalProducts = products.length;
+                
+                // Calculate unique categories
+                const categories = [...new Set(products.map(product => product.category))];
+                const totalCategories = categories.length;
+
+                // Update the dashboard cards with animation
+                animateCounter('totalProducts', totalProducts);
+                animateCounter('totalCategories', totalCategories);
+
+                // Load category breakdown
+                loadCategoryBreakdown(products, categories);
+
+            } catch (error) {
+                console.error('Error loading dashboard data:', error);
+                // Fallback values
+                document.getElementById('totalProducts').textContent = '15';
+                document.getElementById('totalCategories').textContent = '4';
+            }
+        }
+
+        // Function to animate counter
+        function animateCounter(elementId, targetValue) {
+            const element = document.getElementById(elementId);
+            const duration = 1500; // 1.5 seconds
+            const startTime = performance.now();
+            const startValue = 0;
+
+            function updateCounter(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                
+                // Easing function for smooth animation
+                const easeOutQuart = 1 - Math.pow(1 - progress, 4);
+                const currentValue = Math.floor(startValue + (targetValue - startValue) * easeOutQuart);
+                
+                element.textContent = currentValue;
+
+                if (progress < 1) {
+                    requestAnimationFrame(updateCounter);
+                } else {
+                    element.textContent = targetValue;
+                }
+            }
+
+            requestAnimationFrame(updateCounter);
+        }
+
+        // Function to load category breakdown
+        function loadCategoryBreakdown(products, categories) {
+            const categoryBreakdown = document.getElementById('categoryBreakdown');
+            
+            // Calculate products per category
+            const categoryData = categories.map(category => {
+                const count = products.filter(product => product.category === category).length;
+                const percentage = ((count / products.length) * 100).toFixed(1);
+                return { category, count, percentage };
+            });
+
+            // Sort by count (descending)
+            categoryData.sort((a, b) => b.count - a.count);
+
+            // Category colors
+            const categoryColors = {
+                'pigments': '#007bff',
+                'deys': '#28a745',
+                'colorants': '#ffc107',
+                'additives': '#dc3545'
+            };
+
+            // Check if mobile view
+            const isMobile = window.innerWidth <= 768;
+
+            // Generate HTML based on screen size
+            const html = categoryData.map(item => {
+                if (isMobile) {
+                    // Mobile layout - stacked cards
+                    return `
+                        <div class="category-item-mobile d-flex align-items-center justify-content-between mb-3 p-3 border rounded">
+                            <div class="category-info-mobile d-flex align-items-center">
+                                <div class="category-color-indicator-mobile me-3" 
+                                     style="width: 24px; height: 24px; background-color: ${categoryColors[item.category] || '#6c757d'}; border-radius: 50%; flex-shrink: 0;"></div>
+                                <div>
+                                    <div class="category-name-mobile fw-semibold text-capitalize">${item.category}</div>
+                                    <small class="category-count-mobile text-muted">${item.count} products</small>
+                                </div>
+                            </div>
+                            <div class="category-stats-mobile text-end">
+                                <div class="category-percentage-mobile fw-bold mb-1">${item.percentage}%</div>
+                                <div class="progress category-progress-mobile" style="width: 80px; height: 8px;">
+                                    <div class="progress-bar" 
+                                         style="width: ${item.percentage}%; background-color: ${categoryColors[item.category] || '#6c757d'};"
+                                         role="progressbar"></div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    // Desktop layout - horizontal
+                    return `
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <div class="d-flex align-items-center">
+                                <div class="category-color-indicator me-3" 
+                                     style="width: 20px; height: 20px; background-color: ${categoryColors[item.category] || '#6c757d'}; border-radius: 50%;"></div>
+                                <div>
+                                    <div class="fw-medium text-capitalize">${item.category}</div>
+                                    <small class="text-muted">${item.count} products</small>
+                                </div>
+                            </div>
+                            <div class="text-end">
+                                <div class="fw-bold">${item.percentage}%</div>
+                                <div class="progress mt-1" style="width: 100px; height: 6px;">
+                                    <div class="progress-bar" 
+                                         style="width: ${item.percentage}%; background-color: ${categoryColors[item.category] || '#6c757d'};"
+                                         role="progressbar"></div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+            }).join('');
+
+            categoryBreakdown.innerHTML = html;
+        }
+
+        // Function to handle window resize
+        function handleResize() {
+            // Reload category breakdown on resize to switch between mobile/desktop layouts
+            const products = [
+                { id: 1, name: "Titanium Dioxide White", category: "deys", colorShade: "#FFFFFF", ciGenericName: "Titanium Dioxide", casNumber: "13463-67-7" },
+                { id: 2, name: "Iron Oxide Red", category: "pigments", colorShade: "#CD5C5C", ciGenericName: "Iron Oxide", casNumber: "1309-37-1" },
+                { id: 3, name: "Ultramarine Blue", category: "pigments", colorShade: "#4169E1", ciGenericName: "Ultramarine", casNumber: "57455-37-5" },
+                { id: 4, name: "Chrome Yellow", category: "pigments", colorShade: "#FFD700", ciGenericName: "Lead Chromate", casNumber: "7758-97-6" },
+                { id: 5, name: "Carbon Black", category: "pigments", colorShade: "#000000", ciGenericName: "Carbon Black", casNumber: "1333-86-4" },
+                { id: 6, name: "Phthalocyanine Green", category: "deys", colorShade: "#00FF7F", ciGenericName: "Copper Phthalocyanine", casNumber: "1328-53-6" },
+                { id: 7, name: "Cadmium Orange", category: "pigments", colorShade: "#FF8C00", ciGenericName: "Cadmium Selenide", casNumber: "1306-24-7" },
+                { id: 8, name: "Quinacridone Violet", category: "colorants", colorShade: "#8B008B", ciGenericName: "Quinacridone", casNumber: "1047-16-1" },
+                { id: 9, name: "Zinc Oxide White", category: "additives", colorShade: "#F8F8FF", ciGenericName: "Zinc Oxide", casNumber: "1314-13-2" },
+                { id: 10, name: "Prussian Blue", category: "deys", colorShade: "#003153", ciGenericName: "Iron Hexacyanoferrate", casNumber: "14038-43-8" },
+                { id: 11, name: "Vermillion Red", category: "pigments", colorShade: "#E34234", ciGenericName: "Mercury Sulfide", casNumber: "1344-48-5" },
+                { id: 12, name: "Cobalt Blue", category: "colorants", colorShade: "#0047AB", ciGenericName: "Cobalt Aluminate", casNumber: "1345-16-0" },
+                { id: 13, name: "Chromium Green", category: "pigments", colorShade: "#50C878", ciGenericName: "Chromium Oxide", casNumber: "1308-38-9" },
+                { id: 14, name: "Alizarin Crimson", category: "deys", colorShade: "#E32636", ciGenericName: "Alizarin", casNumber: "72-48-0" },
+                { id: 15, name: "Burnt Sienna", category: "colorants", colorShade: "#A0522D", ciGenericName: "Iron Oxide", casNumber: "51274-00-1" }
+            ];
+            
+            const categories = [...new Set(products.map(product => product.category))];
+            loadCategoryBreakdown(products, categories);
+        }
+
+        // Initialize dashboard when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            setCurrentDate();
+            loadDashboardData();
+            
+            // Add resize listener for responsive category breakdown
+            let resizeTimeout;
+            window.addEventListener('resize', function() {
+                clearTimeout(resizeTimeout);
+                resizeTimeout = setTimeout(handleResize, 250);
+            });
+        });
+    </script>
 </body>
+
 </html>
