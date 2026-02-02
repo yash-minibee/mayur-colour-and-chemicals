@@ -1,124 +1,47 @@
-<!DOCTYPE html>
-<html lang="en">
+<?php 
+$productNavActive = 1;
+$pageTitle = "Products |";
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="apple-mobile-web-app-title" content="Mayur Colour Admin">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="theme-color" content="#0891b2">
-    <title>Products - Mayur Colour Admin</title>
+include_once "auth-admin.php";
 
-    <!-- Bootstrap 5 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
-        rel="stylesheet">
-    <!-- Mayur Colour Admin Styles -->
-    <link href="assets/css/styles.css" rel="stylesheet">
-</head>
+include "./partials/header.php";
 
-<body>
-    <!-- Sidebar -->
-    <div class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <h4 class="text-white mb-0">Mayur Colour</h4>
-            <small class="text-light opacity-75">Admin Panel</small>
-        </div>
-
-        <nav class="sidebar-nav">
-            <ul class="nav flex-column">
-                <li class="nav-item">
-                    <a class="nav-link" href="dashboard.html">
-                        <i class="bi bi-speedometer2"></i>
-                        Dashboard
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active" href="products.html">
-                        <i class="bi bi-palette"></i>
-                        Products
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="category.html">
-                        <i class="bi bi-tags"></i>
-                        Categories
-                    </a>
-                </li>
-
-            </ul>
-        </nav>
-    </div>
-
-    <!-- Main Content -->
-    <div class="main-content">
-        <!-- Top Navigation -->
-        <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom">
-            <div class="container-fluid">
-                <button class="btn btn-outline-secondary me-3" id="sidebarToggle">
-                    <i class="bi bi-list"></i>
-                </button>
-
-                <div class="navbar-nav ms-auto">
-                    <div class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button"
-                            data-bs-toggle="dropdown">
-                            <div class="avatar bg-primary text-white rounded-circle me-2">
-                                <i class="bi bi-person-fill"></i>
-                            </div>
-                            Admin User
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" href="#"><i class="bi bi-person me-2"></i>Profile</a></li>
-                            <li><a class="dropdown-item" href="#"><i class="bi bi-gear me-2"></i>Settings</a></li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li><a class="dropdown-item" href="#"><i class="bi bi-box-arrow-right me-2"></i>Logout</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </nav>
-
+?>
         <!-- Products Content -->
         <div class="content-area">
-            <div class="d-flex justify-content-between align-items-center mb-4">
+            <!-- Header - Responsive -->
+            <div class="d-flex justify-content-between align-items-center mb-4 mobile-header">
                 <h2 class="mb-0">Product Management</h2>
-                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addProductModal">
-                    <i class="bi bi-plus-circle me-2"></i>Add New Product
+                <button class="btn btn-primary btn-touch" onclick="openAddProductModal()">
+                    <i class="bi bi-plus-circle me-2"></i>
+                    <span>Add New Product</span>
                 </button>
             </div>
 
-            <!-- Search Filter -->
+            <!-- Search Filter - Responsive -->
             <div class="card border-0 shadow-sm mb-4">
                 <div class="card-body">
-                    <div class="row g-3">
+                    <div class="row g-3 mobile-search-row">
                         <div class="col-md-8">
                             <label class="form-label">Search Products</label>
                             <div class="input-group">
-                                <input type="text" class="form-control"
-                                    placeholder="Search products by name, CAS number, or generic name..."
+                                <input type="text" class="form-control" placeholder="Search products..."
                                     id="searchInput">
-                                <button class="btn btn-outline-secondary" type="button">
+                                <button class="btn btn-outline-secondary btn-touch" type="button">
                                     <i class="bi bi-search"></i>
                                 </button>
                             </div>
                         </div>
                         <div class="col-md-4">
-                            <label class="form-label">&nbsp;</label>
-                            <div class="d-flex gap-2">
-                                <button class="btn btn-outline-secondary" id="resetFilters">
-                                    <i class="bi bi-arrow-clockwise me-1"></i>Reset
+                            <label class="form-label d-none d-md-block">&nbsp;</label>
+                            <div class="d-flex gap-2 mobile-buttons">
+                                <button class="btn btn-outline-secondary btn-touch" id="resetFilters">
+                                    <i class="bi bi-arrow-clockwise me-1"></i>
+                                    <span>Reset</span>
                                 </button>
-                                <button class="btn btn-outline-primary" id="exportProducts">
-                                    <i class="bi bi-download me-1"></i>Export
+                                <button class="btn btn-outline-primary btn-touch" id="exportProducts">
+                                    <i class="bi bi-download me-1"></i>
+                                    <span>Export</span>
                                 </button>
                             </div>
                         </div>
@@ -126,23 +49,23 @@
                 </div>
             </div>
 
-            <!-- Products Table -->
-            <div class="card border-0 shadow-sm">
+            <!-- Desktop Table View -->
+            <div class="card border-0 shadow-sm desktop-table">
                 <div class="card-body p-0">
                     <div class="table-responsive">
-                        <table class="table table-hover mb-0" id="productsTable">
+                        <table class="table table-hover mb-0 tablet-table" id="productsTable">
                             <thead class="table-light">
                                 <tr>
                                     <th scope="col" class="border-0 ps-4">ID</th>
                                     <th scope="col" class="border-0">Product Name</th>
                                     <th scope="col" class="border-0">Category</th>
                                     <th scope="col" class="border-0">Color Shade</th>
-                                    <th scope="col" class="border-0">CI Generic Name</th>
-                                    <th scope="col" class="border-0">CAS Number</th>
+                                    <th scope="col" class="border-0 d-none d-lg-table-cell">CI Generic Name</th>
+                                    <th scope="col" class="border-0 d-none d-xl-table-cell">CAS Number</th>
                                     <th scope="col" class="border-0 text-center">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="productsTableBody">
                                 <!-- Products will be dynamically loaded here -->
                             </tbody>
                         </table>
@@ -150,11 +73,16 @@
                 </div>
             </div>
 
-            <!-- Pagination Controls -->
-            <div class="d-flex justify-content-between align-items-center mt-4">
+            <!-- Mobile Card View -->
+            <div class="mobile-table-card" id="mobileProductsContainer">
+                <!-- Mobile cards will be dynamically loaded here -->
+            </div>
+
+            <!-- Pagination Controls - Responsive -->
+            <div class="d-flex justify-content-between align-items-center mt-4 mobile-pagination">
                 <!-- Items per page selector -->
                 <div class="d-flex align-items-center">
-                    <label class="form-label me-2 mb-0">Show:</label>
+                    <label class="form-label me-2 mb-0 d-none d-sm-inline">Show:</label>
                     <select class="form-select form-select-sm" id="itemsPerPage" style="width: auto;">
                         <option value="5">5</option>
                         <option value="10" selected>10</option>
@@ -168,13 +96,19 @@
                 <nav aria-label="Products pagination">
                     <ul class="pagination mb-0" id="paginationControls">
                         <li class="page-item disabled">
-                            <a class="page-link" href="#" tabindex="-1" id="prevPage">Previous</a>
+                            <a class="page-link" href="#" tabindex="-1" id="prevPage">
+                                <span class="d-none d-sm-inline">Previous</span>
+                                <i class="bi bi-chevron-left d-sm-none"></i>
+                            </a>
                         </li>
                         <li class="page-item active">
                             <a class="page-link" href="#" id="page1">1</a>
                         </li>
                         <li class="page-item">
-                            <a class="page-link" href="#" id="nextPage">Next</a>
+                            <a class="page-link" href="#" id="nextPage">
+                                <span class="d-none d-sm-inline">Next</span>
+                                <i class="bi bi-chevron-right d-sm-none"></i>
+                            </a>
                         </li>
                     </ul>
                 </nav>
@@ -187,7 +121,7 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Add New Product</h5>
+                    <h5 class="modal-title" id="productModalTitle">Add New Product</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
@@ -237,15 +171,13 @@
                             <div class="col-md-12">
                                 <div class="mb-3">
                                     <label class="form-label">Color Shade *</label>
-                                    <div class="d-flex align-items-center gap-3">
+                                    <div class="d-flex align-items-center gap-3 color-controls-mobile">
                                         <input type="color" class="form-control form-control-color"
                                             id="productColorShade" value="#FFFFFF" style="width: 60px;">
-                                        <div class="color-preview" id="colorPreview"
-                                            style="width: 50px; height: 30px; background-color: #FFFFFF; border: 1px solid #ccc; border-radius: 4px;">
-                                        </div>
                                         <input type="text" class="form-control" id="colorHexInput" value="#FFFFFF"
                                             style="width: 100px;" placeholder="#FFFFFF">
-                                        <small class="text-muted">Select or enter the product color</small>
+                                        <small class="text-muted d-none d-sm-inline">Select or enter the product
+                                            color</small>
                                     </div>
                                 </div>
                             </div>
@@ -270,10 +202,11 @@
 
     <!-- Bootstrap 5 JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Fixed Admin JS -->
-    <script src="assets/js/admin-fixed.js"></script>
     <!-- Products Data and Logic -->
     <script src="assets/js/products.js"></script>
-</body>
 
-</html>
+<?php 
+
+include "./partials/footer.php";
+
+?>

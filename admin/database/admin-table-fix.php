@@ -1,12 +1,15 @@
 <?php
 include 'db.php';
 
-$sql = "CREATE TABLE IF NOT EXISTS users (
+$sql = "DROP TABLE IF EXISTS admins;
+
+CREATE TABLE admins (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL,
-    email TEXT UNIQUE,
+    username TEXT NOT NULL UNIQUE,
+    password TEXT NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-)";
+);
+";
 
 $result = $db->exec($sql);
 

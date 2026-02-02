@@ -1,259 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
+<?php 
+$dashboardNavActive = 1;
+$pageTitle = "Dashboard |";
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="apple-mobile-web-app-title" content="Mayur Colour Admin">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="theme-color" content="#0891b2">
-    <title>Dashboard - Mayur Colour Admin</title>
+include_once "auth-admin.php";
 
-    <!-- Bootstrap 5 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
-        rel="stylesheet">
-    <!-- Mayur Colour Admin Styles -->
-    <link href="assets/css/styles.css" rel="stylesheet">
-    
-    <!-- Custom Responsive Styles for Dashboard -->
-    <style>
-        /* Mobile-first responsive design */
-        @media (max-width: 768px) {
-            .content-area {
-                padding: 1rem !important;
-            }
-            
-            .main-content {
-                margin-left: 0 !important;
-            }
-            
-            .sidebar {
-                transform: translateX(-100%);
-                transition: transform 0.3s ease;
-                z-index: 1050;
-            }
-            
-            .sidebar.show {
-                transform: translateX(0);
-            }
-            
-            .sidebar-overlay {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0, 0, 0, 0.5);
-                z-index: 1040;
-                display: none;
-            }
-            
-            .sidebar-overlay.show {
-                display: block;
-            }
-            
-            /* Mobile dashboard header */
-            .dashboard-header {
-                flex-direction: column;
-                align-items: flex-start !important;
-                gap: 0.5rem;
-            }
-            
-            .dashboard-header h2 {
-                font-size: 1.5rem !important;
-            }
-            
-            .dashboard-date {
-                font-size: 0.875rem;
-            }
-            
-            /* Mobile stats cards */
-            .stats-card {
-                margin-bottom: 1rem;
-            }
-            
-            .stats-card .card-body {
-                padding: 2rem 1rem !important;
-            }
-            
-            .stats-card .stats-icon {
-                width: 60px !important;
-                height: 60px !important;
-            }
-            
-            .stats-card .stats-icon i {
-                font-size: 1.5rem !important;
-            }
-            
-            .stats-card .stats-number {
-                font-size: 2rem !important;
-            }
-            
-            .stats-card .stats-label {
-                font-size: 1rem !important;
-            }
-            
-            /* Mobile category breakdown */
-            .category-breakdown-mobile {
-                padding: 1rem;
-            }
-            
-            .category-item-mobile {
-                flex-direction: column;
-                align-items: flex-start !important;
-                padding: 1rem;
-                border: 1px solid #dee2e6;
-                border-radius: 0.5rem;
-                margin-bottom: 1rem;
-                background: #f8f9fa;
-            }
-            
-            .category-info-mobile {
-                width: 100%;
-                margin-bottom: 0.75rem;
-            }
-            
-            .category-stats-mobile {
-                width: 100%;
-            }
-            
-            .category-progress-mobile {
-                width: 100% !important;
-                height: 8px !important;
-                margin-top: 0.5rem;
-            }
-        }
-        
-        /* Tablet adjustments */
-        @media (min-width: 769px) and (max-width: 1024px) {
-            .content-area {
-                padding: 1.5rem;
-            }
-            
-            .stats-card .card-body {
-                padding: 3rem 1.5rem !important;
-            }
-            
-            .stats-card .stats-icon {
-                width: 70px !important;
-                height: 70px !important;
-            }
-            
-            .stats-card .stats-number {
-                font-size: 2.5rem !important;
-            }
-        }
-        
-        /* Touch-friendly buttons */
-        .btn-touch {
-            min-height: 44px;
-            min-width: 44px;
-        }
-        
-        /* Responsive grid adjustments */
-        @media (max-width: 576px) {
-            .stats-cards-mobile .col-xl-4 {
-                margin-bottom: 1rem;
-            }
-        }
-        
-        /* Enhanced mobile category breakdown */
-        .category-color-indicator-mobile {
-            width: 24px !important;
-            height: 24px !important;
-            margin-right: 1rem !important;
-        }
-        
-        .category-name-mobile {
-            font-size: 1.1rem !important;
-            font-weight: 600 !important;
-        }
-        
-        .category-count-mobile {
-            font-size: 0.9rem !important;
-            color: #6c757d !important;
-        }
-        
-        .category-percentage-mobile {
-            font-size: 1.2rem !important;
-            font-weight: 700 !important;
-            color: #2c3e50 !important;
-        }
-    </style>
-</head>
+include "./partials/header.php";
+?>
 
-<body>
-    <!-- Sidebar Overlay for Mobile -->
-    <div class="sidebar-overlay" id="sidebarOverlay"></div>
-
-    <!-- Sidebar -->
-    <div class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <h4 class="text-white mb-0">Mayur Colour</h4>
-            <small class="text-light opacity-75">Admin Panel</small>
-        </div>
-
-        <nav class="sidebar-nav">
-            <ul class="nav flex-column">
-                <li class="nav-item">
-                    <a class="nav-link active" href="dashboard.html">
-                        <i class="bi bi-speedometer2"></i>
-                        Dashboard
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="products.html">
-                        <i class="bi bi-palette"></i>
-                        Products
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="category.html">
-                        <i class="bi bi-tags"></i>
-                        Categories
-                    </a>
-                </li>
-            </ul>
-        </nav>
-    </div>
-
-    <!-- Main Content -->
-    <div class="main-content">
-        <!-- Top Navigation -->
-        <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom">
-            <div class="container-fluid">
-                <button class="btn btn-outline-secondary me-3" id="sidebarToggle">
-                    <i class="bi bi-list"></i>
-                </button>
-
-                <div class="navbar-nav ms-auto">
-                    <div class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button"
-                            data-bs-toggle="dropdown">
-                            <div class="avatar bg-primary text-white rounded-circle me-2">
-                                <i class="bi bi-person-fill"></i>
-                            </div>
-                            Admin User
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" href="#"><i class="bi bi-person me-2"></i>Profile</a></li>
-                            <li><a class="dropdown-item" href="#"><i class="bi bi-gear me-2"></i>Settings</a></li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li><a class="dropdown-item" href="#"><i class="bi bi-box-arrow-right me-2"></i>Logout</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </nav>
 
         <!-- Dashboard Content -->
         <div class="content-area">
@@ -276,7 +29,7 @@
                             <div class="stats-number mb-2" style="font-size: 3rem; font-weight: 700; color: #2c3e50;" id="totalProducts">0</div>
                             <div class="stats-label" style="font-size: 1.1rem; color: #6c757d; font-weight: 500;">Total Products</div>
                             <div class="mt-3">
-                                <a href="products.html" class="btn btn-outline-primary btn-sm btn-touch">
+                                <a href="products.php" class="btn btn-outline-primary btn-sm btn-touch">
                                     <i class="bi bi-arrow-right me-1"></i><span class="d-none d-sm-inline">View </span>Products
                                 </a>
                             </div>
@@ -293,7 +46,7 @@
                             <div class="stats-number mb-2" style="font-size: 3rem; font-weight: 700; color: #2c3e50;" id="totalCategories">0</div>
                             <div class="stats-label" style="font-size: 1.1rem; color: #6c757d; font-weight: 500;">Product Categories</div>
                             <div class="mt-3">
-                                <a href="category.html" class="btn btn-outline-success btn-sm btn-touch">
+                                <a href="category.php" class="btn btn-outline-success btn-sm btn-touch">
                                     <i class="bi bi-arrow-right me-1"></i><span class="d-none d-sm-inline">View </span>Categories
                                 </a>
                             </div>
@@ -527,6 +280,9 @@
             });
         });
     </script>
-</body>
 
-</html>
+<?php 
+
+include "./partials/footer.php";
+
+?>
