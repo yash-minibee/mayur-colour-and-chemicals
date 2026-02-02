@@ -1067,6 +1067,220 @@ html {
     scroll-behavior: smooth;
 }
 
+/* Categories Horizontal Scroll Styles */
+.categories-scroll-container {
+    position: relative;
+    margin: 2rem 0;
+}
+
+.categories-horizontal-scroll {
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-behavior: smooth;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+}
+
+.categories-horizontal-scroll::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+}
+
+.categories-scroll-content {
+    display: flex;
+    gap: 1.5rem;
+    padding: 1rem 0;
+    min-width: max-content;
+}
+
+/* Category Scroll Cards - Sized for exactly 3 cards at a time */
+.category-scroll-card {
+    flex: 0 0 calc((100% - 3rem) / 3); /* Exactly 3 cards per view */
+    max-width: calc((100% - 3rem) / 3);
+    min-width: 280px;
+    background: white;
+    border-radius: 1rem;
+    padding: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e5e7eb;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    min-height: 300px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Responsive adjustments for 3 cards at a time */
+@media (min-width: 1200px) {
+    .categories-scroll-container {
+        padding: 0 2rem;
+    }
+    
+    .category-scroll-card {
+        flex: 0 0 calc((100% - 3rem) / 3);
+        max-width: calc((100% - 3rem) / 3);
+    }
+}
+
+@media (max-width: 1199px) and (min-width: 768px) {
+    .categories-scroll-container {
+        padding: 0 1.5rem;
+    }
+    
+    .category-scroll-card {
+        flex: 0 0 calc((100% - 3rem) / 3);
+        max-width: calc((100% - 3rem) / 3);
+        min-width: 250px;
+    }
+}
+
+@media (max-width: 767px) {
+    .categories-scroll-container {
+        padding: 0 1rem;
+    }
+    
+    .category-scroll-card {
+        flex: 0 0 calc(100% - 2rem); /* 1 card on mobile */
+        max-width: calc(100% - 2rem);
+        min-width: 280px;
+    }
+    
+    .categories-scroll-content {
+        gap: 1rem;
+    }
+}
+
+.category-scroll-card:hover {
+    transform: translateY(-0.5rem);
+    box-shadow: 0 20px 25px rgba(0, 0, 0, 0.1);
+    border-color: var(--primary);
+}
+
+.category-card-content {
+    text-align: center;
+}
+
+.category-card-icon {
+    width: 4rem;
+    height: 4rem;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    border-radius: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+    color: white;
+    font-size: 1.5rem;
+    transition: transform 0.3s ease;
+}
+
+.category-scroll-card:hover .category-card-icon {
+    transform: scale(1.1) rotate(5deg);
+}
+
+.category-card-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: var(--foreground);
+}
+
+.category-card-description {
+    font-size: 0.875rem;
+    color: var(--muted);
+    margin-bottom: 1.5rem;
+    line-height: 1.5;
+}
+
+.category-card-stats {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.category-badge {
+    background: rgba(8, 145, 178, 0.1);
+    color: var(--primary);
+    padding: 0.25rem 0.75rem;
+    border-radius: 1rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.category-arrow {
+    color: var(--primary);
+    font-size: 1rem;
+    transition: transform 0.3s ease;
+}
+
+.category-scroll-card:hover .category-arrow {
+    transform: translateX(0.25rem);
+}
+
+/* Scroll Navigation Buttons */
+.categories-scroll-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3rem;
+    height: 3rem;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary);
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 10;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.categories-scroll-btn:hover {
+    background: var(--primary);
+    color: white;
+    transform: translateY(-50%) scale(1.1);
+    box-shadow: 0 8px 15px rgba(8, 145, 178, 0.3);
+}
+
+.categories-scroll-left {
+    left: -1.5rem;
+}
+
+.categories-scroll-right {
+    right: -1.5rem;
+}
+
+/* Scroll Indicators */
+.categories-scroll-indicators {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+}
+
+.scroll-indicator {
+    width: 0.75rem;
+    height: 0.75rem;
+    border-radius: 50%;
+    background: #e5e7eb;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.scroll-indicator.active {
+    background: var(--primary);
+    transform: scale(1.2);
+}
+
+.scroll-indicator:hover {
+    background: var(--primary);
+    transform: scale(1.1);
+}
+
 /* Products Z-index management */
 .z-2 {
     z-index: 2;
@@ -3363,4 +3577,346 @@ body.modal-open .sticky-inquiry-cart {
         transform: translateY(100px);
         opacity: 0;
     }
+}/* ==
+=== HORIZONTAL SCROLL CATEGORIES STYLES (MINIMAL DESIGN) ===== */
+
+/* Categories Scroll Container */
+.categories-scroll-container {
+    position: relative;
+    margin: 0 -1rem;
+    padding: 0 1rem;
+}
+
+/* Horizontal Scroll Wrapper */
+.categories-horizontal-scroll {
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-behavior: smooth;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+    padding: 1rem 0 2rem 0;
+}
+
+.categories-horizontal-scroll::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+}
+
+/* Scroll Content Container */
+.categories-scroll-content {
+    display: flex;
+    gap: 1.5rem;
+    padding: 0 2rem;
+    min-width: max-content;
+}
+
+/* Category Scroll Cards - Minimal Design */
+.category-scroll-card {
+    position: relative;
+    width: 320px;
+    min-width: 320px;
+    height: 280px;
+    background: white;
+    border-radius: 1rem;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.category-scroll-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+    border-color: #0891b2;
+}
+
+/* Category Card Content */
+.category-card-content {
+    position: relative;
+    z-index: 2;
+    padding: 2rem;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/* Category Card Icon - Minimal Style */
+.category-card-icon {
+    width: 60px;
+    height: 60px;
+    background: #f8fafc;
+    border-radius: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+    border: 1px solid #e2e8f0;
+    transition: all 0.3s ease;
+}
+
+.category-card-icon i {
+    font-size: 1.5rem;
+    color: #64748b;
+    transition: all 0.3s ease;
+}
+
+.category-scroll-card:hover .category-card-icon {
+    background: #0891b2;
+    border-color: #0891b2;
+    transform: scale(1.05);
+}
+
+.category-scroll-card:hover .category-card-icon i {
+    color: white;
+}
+
+/* Category Card Title */
+.category-card-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 0.75rem;
+    line-height: 1.3;
+}
+
+/* Category Card Description */
+.category-card-description {
+    font-size: 0.875rem;
+    color: #64748b;
+    line-height: 1.5;
+    margin-bottom: 1.5rem;
+    flex-grow: 1;
+}
+
+/* Category Card Stats */
+.category-card-stats {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.category-badge {
+    background: #f1f5f9;
+    color: #475569;
+    padding: 0.5rem 1rem;
+    border-radius: 2rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border: 1px solid #e2e8f0;
+    transition: all 0.3s ease;
+}
+
+.category-scroll-card:hover .category-badge {
+    background: #0891b2;
+    color: white;
+    border-color: #0891b2;
+}
+
+.category-arrow {
+    width: 40px;
+    height: 40px;
+    background: #f8fafc;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #e2e8f0;
+    transition: all 0.3s ease;
+}
+
+.category-arrow i {
+    color: #64748b;
+    font-size: 0.875rem;
+    transition: all 0.3s ease;
+}
+
+.category-scroll-card:hover .category-arrow {
+    background: #0891b2;
+    border-color: #0891b2;
+    transform: translateX(4px);
+}
+
+.category-scroll-card:hover .category-arrow i {
+    color: white;
+}
+
+/* Scroll Navigation Buttons */
+.categories-scroll-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 50px;
+    height: 50px;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 50%;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    transition: all 0.3s ease;
+    opacity: 0.9;
+}
+
+.categories-scroll-btn:hover {
+    opacity: 1;
+    transform: translateY(-50%) scale(1.05);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+    border-color: #0891b2;
+    background: #0891b2;
+}
+
+.categories-scroll-btn i {
+    color: #64748b;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.categories-scroll-btn:hover i {
+    color: white;
+}
+
+.categories-scroll-left {
+    left: -25px;
+}
+
+.categories-scroll-right {
+    right: -25px;
+}
+
+/* Scroll Indicators */
+.categories-scroll-indicators {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.scroll-indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #cbd5e1;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.scroll-indicator.active {
+    background: #0891b2;
+    transform: scale(1.2);
+}
+
+.scroll-indicator:hover {
+    background: #0891b2;
+    transform: scale(1.1);
+}
+
+/* Mobile Responsive Styles */
+@media (max-width: 768px) {
+    .categories-scroll-container {
+        margin: 0 -0.5rem;
+        padding: 0 0.5rem;
+    }
+    
+    .categories-scroll-content {
+        gap: 1rem;
+        padding: 0 1rem;
+    }
+    
+    .category-scroll-card {
+        width: 280px;
+        min-width: 280px;
+        height: 260px;
+    }
+    
+    .category-card-content {
+        padding: 1.5rem;
+    }
+    
+    .category-card-icon {
+        width: 50px;
+        height: 50px;
+        margin-bottom: 1rem;
+    }
+    
+    .category-card-icon i {
+        font-size: 1.25rem;
+    }
+    
+    .category-card-title {
+        font-size: 1.125rem;
+    }
+    
+    .category-card-description {
+        font-size: 0.8rem;
+        margin-bottom: 1rem;
+    }
+    
+    .categories-scroll-btn {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .categories-scroll-left {
+        left: -20px;
+    }
+    
+    .categories-scroll-right {
+        right: -20px;
+    }
+}
+
+@media (max-width: 576px) {
+    .categories-scroll-btn {
+        display: none;
+    }
+    
+    .category-scroll-card {
+        width: 260px;
+        min-width: 260px;
+        height: 240px;
+    }
+    
+    .category-card-content {
+        padding: 1.25rem;
+    }
+    
+    .category-card-icon {
+        width: 45px;
+        height: 45px;
+    }
+    
+    .category-card-title {
+        font-size: 1rem;
+    }
+    
+    .category-card-description {
+        font-size: 0.75rem;
+    }
+}
+
+/* Smooth scroll animation */
+@media (prefers-reduced-motion: no-preference) {
+    .categories-horizontal-scroll {
+        scroll-behavior: smooth;
+    }
+}
+
+/* Focus styles for accessibility */
+.category-scroll-card:focus {
+    outline: 2px solid #0891b2;
+    outline-offset: 2px;
+}
+
+.categories-scroll-btn:focus {
+    outline: 2px solid #0891b2;
+    outline-offset: 2px;
+}
+
+.scroll-indicator:focus {
+    outline: 2px solid #0891b2;
+    outline-offset: 2px;
 }

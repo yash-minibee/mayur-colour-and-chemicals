@@ -23,7 +23,7 @@
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top border-bottom" id="navbar">
         <div class="container-lg">
-            <a class="navbar-brand" href="index.html">
+            <a class="navbar-brand" href="index.php">
                 <img src="assets/images/logo-20-282-29.jpg" alt="Mayur Colour & Chemicals" height="50">
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -31,19 +31,19 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <!-- <div class="navbar-nav ms-auto">
-                    <a class="nav-link active" href="index.html">Home</a>
-                    <a class="nav-link" href="about.html">About</a>
+                    <a class="nav-link active" href="index.php">Home</a>
+                    <a class="nav-link" href="about.php">About</a>
                     <a class="nav-link" href="#products">Products</a>
                     <a class="nav-link" href="#quality">QC</a>
                     <a class="nav-link" href="#contact">Contact</a>
                 </div> -->
                 <!-- CENTER NAV -->
                 <div class="navbar-nav mx-auto text-center gap-4">
-                    <a class="nav-link active" href="index.html">Home</a>
-                    <a class="nav-link" href="about.html">About</a>
-                    <a class="nav-link" href="products.html">Products</a>
-                    <a class="nav-link" href="index.html#quality">QC</a>
-                    <a class="nav-link" href="contact.html">Contact</a>
+                    <a class="nav-link active" href="index.php">Home</a>
+                    <a class="nav-link" href="about.php">About</a>
+                    <a class="nav-link" href="products.php">Products</a>   
+                    <a class="nav-link" href="index.php#quality">QC</a>
+                    <a class="nav-link" href="contact.php">Contact</a>
                 </div>
             </div>
         </div>
@@ -80,10 +80,10 @@
                                         <h1 class="hero-title">Premium Colour Solutions for <span class="text-gradient">Modern Industries</span></h1>
                                         <p class="hero-description">Manufacturing and exporting high-quality dyes and pigments worldwide. Trusted by manufacturers for consistent quality and innovative color solutions.</p>
                                         <div class="hero-actions">
-                                            <a href="products.html" class="btn btn-primary btn-lg">
+                                            <a href="products.php" class="btn btn-primary btn-lg">
                                                 <i class="fas fa-palette me-2"></i>Explore Products
                                             </a>
-                                            <a href="contact.html" class="btn btn-outline-light btn-lg">
+                                            <a href="contact.php" class="btn btn-outline-light btn-lg">
                                                 <i class="fas fa-phone me-2"></i>Contact Sales
                                             </a>
                                         </div>
@@ -150,10 +150,10 @@
                                             </div>
                                         </div>
                                         <div class="hero-actions">
-                                            <a href="products.html" class="btn btn-primary btn-lg">
+                                            <a href="products.php" class="btn btn-primary btn-lg">
                                                 <i class="fas fa-eye me-2"></i>View Products
                                             </a>
-                                            <a href="contact.html" class="btn btn-outline-light btn-lg">
+                                            <a href="contact.php" class="btn btn-outline-light btn-lg">
                                                 <i class="fas fa-download me-2"></i>Get Catalog
                                             </a>
                                         </div>
@@ -235,10 +235,10 @@
                                             </div>
                                         </div>
                                         <div class="hero-actions">
-                                            <a href="about.html" class="btn btn-primary btn-lg">
+                                            <a href="about.php" class="btn btn-primary btn-lg">
                                                 <i class="fas fa-info-circle me-2"></i>Learn More
                                             </a>
-                                            <a href="contact.html" class="btn btn-outline-light btn-lg">
+                                            <a href="contact.php" class="btn btn-outline-light btn-lg">
                                                 <i class="fas fa-map-marker-alt me-2"></i>Visit Facility
                                             </a>
                                         </div>
@@ -316,10 +316,10 @@
                                             </div>
                                         </div>
                                         <div class="hero-actions">
-                                            <a href="contact.html" class="btn btn-primary btn-lg">
+                                            <a href="contact.php" class="btn btn-primary btn-lg">
                                                 <i class="fas fa-envelope me-2"></i>Get Quote
                                             </a>
-                                            <a href="about.html" class="btn btn-outline-light btn-lg">
+                                            <a href="about.php" class="btn btn-outline-light btn-lg">
                                                 <i class="fas fa-users me-2"></i>Our Story
                                             </a>
                                         </div>
@@ -499,8 +499,8 @@
                 <div class="col-md-3">
                     <h6 class="fw-bold mb-3">Quick Links</h6>
                     <ul class="list-unstyled small">
-                        <li><a href="about.html" class="text-white-50 text-decoration-none">About Us</a></li>
-                        <li><a href="products.html" class="text-white-50 text-decoration-none">Products</a></li>
+                        <li><a href="about.php" class="text-white-50 text-decoration-none">About Us</a></li>
+                        <li><a href="products.php" class="text-white-50 text-decoration-none">Products</a></li>
                         <li><a href="#quality" class="text-white-50 text-decoration-none">Quality</a></li>
                         <li><a href="#contact" class="text-white-50 text-decoration-none">Contact</a></li>
                     </ul>

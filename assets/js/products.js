@@ -1,138 +1,76 @@
 // Products Page JavaScript - Enhanced Mayur Colour Design
 
 // Product data with 15 diverse products across different categories
-const products = [
-    // PIGMENTS
-    {
-        id: 1,
-        name: "Titanium Dioxide White",
-        category: "pigments",
-        colorShade: "#FFFFFF",
-        ciGenericName: "Titanium Dioxide",
-        casNumber: "13463-67-7",
-    },
-    {
-        id: 2,
-        name: "Iron Oxide Red",
-        category: "pigments",
-        colorShade: "#CD5C5C",
-        ciGenericName: "Iron Oxide Red",
-        casNumber: "1309-37-1",
-    },
-    {
-        id: 3,
-        name: "Chrome Green Oxide",
-        category: "pigments",
-        colorShade: "#228B22",
-        ciGenericName: "Chromium Oxide Green",
-        casNumber: "1308-38-9",
-    },
-    {
-        id: 4,
-        name: "Ultramarine Blue",
-        category: "pigments",
-        colorShade: "#4169E1",
-        ciGenericName: "Ultramarine Blue",
-        casNumber: "57455-37-5",
-    },
-    {
-        id: 5,
-        name: "Carbon Black",
-        category: "pigments",
-        colorShade: "#000000",
-        ciGenericName: "Carbon Black",
-        casNumber: "1333-86-4",
-    },
-    {
-        id: 6,
-        name: "Yellow Iron Oxide",
-        category: "pigments",
-        colorShade: "#FFD700",
-        ciGenericName: "Iron Oxide Yellow",
-        casNumber: "51274-00-1",
-    },
+let products = [];
 
-    // DYES
-    {
-        id: 7,
-        name: "Reactive Red 195",
-        category: "dyes",
-        colorShade: "#DC143C",
-        ciGenericName: "Reactive Red",
-        casNumber: "17095-24-8",
-    },
-    {
-        id: 8,
-        name: "Direct Blue 199",
-        category: "dyes",
-        colorShade: "#0000FF",
-        ciGenericName: "Direct Blue",
-        casNumber: "2602-46-2",
-    },
-    {
-        id: 9,
-        name: "Acid Yellow 23",
-        category: "dyes",
-        colorShade: "#FFFF00",
-        ciGenericName: "Acid Yellow",
-        casNumber: "1934-21-0",
-    },
-    {
-        id: 10,
-        name: "Disperse Orange 30",
-        category: "dyes",
-        colorShade: "#FF8C00",
-        ciGenericName: "Disperse Orange",
-        casNumber: "5261-31-4",
-    },
-
-    // MASTERBATCH
-    {
-        id: 11,
-        name: "Red Masterbatch",
-        category: "masterbatch",
-        colorShade: "#FF0000",
-        ciGenericName: "Red Color Masterbatch",
-        casNumber: "MB-RED-001",
-    },
-    {
-        id: 12,
-        name: "Blue Masterbatch",
-        category: "masterbatch",
-        colorShade: "#0066CC",
-        ciGenericName: "Blue Color Masterbatch",
-        casNumber: "MB-BLUE-001",
-    },
-    {
-        id: 13,
-        name: "Green Masterbatch",
-        category: "masterbatch",
-        colorShade: "#00AA00",
-        ciGenericName: "Green Color Masterbatch",
-        casNumber: "MB-GREEN-001",
-    },
-
-    // SPECIALTY
-    {
-        id: 14,
-        name: "Pearl Luster Silver",
-        category: "specialty",
-        colorShade: "#C0C0C0",
-        ciGenericName: "Mica Based Pearl Pigment",
-        casNumber: "12001-26-2",
-    },
-    {
-        id: 15,
-        name: "Metallic Gold",
-        category: "specialty",
-        colorShade: "#FFD700",
-        ciGenericName: "Bronze Powder",
-        casNumber: "7440-50-8",
-    }
-];
 
 // Inquiry cart to store selected products
 let inquiryCart = [];
+
+const PRODUCT_API = 'admin/productApi.php';
+const CATEGORY_API = 'admin/categoryApi.php';
+
+
+
+// Load Categories
+async function loadCategories() {
+    try {
+        const res = await fetch(CATEGORY_API);
+        const categories = await res.json();
+
+        const filterWrapper = document.getElementById('categoryFilters');
+        filterWrapper.innerHTML = '';
+
+        // "All Products" button
+        filterWrapper.innerHTML += `
+            <button class="btn btn-outline-primary products-filter-btn active" data-filter="all">
+                All Products
+            </button>
+        `;
+
+        categories.forEach(cat => {
+            filterWrapper.innerHTML += `
+                <button 
+                    class="btn btn-outline-primary products-filter-btn"
+                    data-filter="${cat.category_name.toLowerCase()}">
+                    ${cat.category_name}
+                </button>
+            `;
+        });
+
+        initializeFilters(); // rebind events
+    } catch (err) {
+        console.error('Category load failed', err);
+    }
+}
+
+
+
+// Load Products 
+async function loadProducts() {
+    try {
+        const res = await fetch(PRODUCT_API);
+        const data = await res.json();
+
+        // Map API response → frontend structure
+        products = data.map(item => ({
+            id: item.product_id,
+            name: item.product_name,
+            category: item.category_name.toLowerCase(), // IMPORTANT for filters
+            colorShade: item.shade_code || '#cccccc',
+            ciGenericName: item.ci_generic_name || '-',
+            casNumber: item.cas_no || '-',
+            colorIndex: item.color_index || '-' // safe fallback
+        }));
+
+        renderProducts(products);
+    } catch (error) {
+        console.error('Failed to load products:', error);
+        showNotification('Failed to load products', 'danger');
+    }
+}
+
+
 
 // DOM Elements
 const productGrid = document.getElementById('productGrid');
@@ -140,11 +78,13 @@ const filterButtons = document.querySelectorAll('.products-filter-btn');
 const categoryCards = document.querySelectorAll('.products-category-card');
 
 // Initialize page
-document.addEventListener('DOMContentLoaded', function () {
-    renderProducts(products);
-    initializeFilters();
+document.addEventListener('DOMContentLoaded', function () { 
+    initializeFilters(); // 👈 once
+    loadCategories();   // 👈 first
+    loadProducts();     // 👈 then products
     initializeCategoryCards();
     initializeAnimations();
+    initializeCategoryScroll(); // 👈 initialize scroll functionality
 });
 
 // Render products
@@ -208,19 +148,26 @@ function createProductCard(product, index) {
 
 // Initialize filters
 function initializeFilters() {
-    filterButtons.forEach(button => {
-        button.addEventListener('click', function () {
-            const filter = this.dataset.filter;
+    const filterWrapper = document.getElementById('categoryFilters');
 
-            // Update active button
-            filterButtons.forEach(btn => btn.classList.remove('active'));
-            this.classList.add('active');
+    filterWrapper.addEventListener('click', function (e) {
+        const button = e.target.closest('.products-filter-btn');
+        if (!button) return;
 
-            // Filter products
-            filterProducts(filter);
-        });
+        const filter = button.dataset.filter;
+
+        // Active state
+        filterWrapper
+            .querySelectorAll('.products-filter-btn')
+            .forEach(btn => btn.classList.remove('active'));
+
+        button.classList.add('active');
+
+        // Filter products
+        filterProducts(filter);
     });
 }
+
 
 // Filter products
 function filterProducts(category) {
@@ -562,6 +509,217 @@ function initializeAnimations() {
     document.querySelectorAll('.fade-in-up, .products-category-card, .products-feature-card').forEach(el => {
         observer.observe(el);
     });
+}
+
+// Initialize Category Scroll functionality - Updated for 3 cards at a time
+function initializeCategoryScroll() {
+    const scrollContainer = document.getElementById('categoriesScroll');
+    const scrollContent = document.querySelector('.categories-scroll-content');
+    const scrollLeft = document.getElementById('scrollLeft');
+    const scrollRight = document.getElementById('scrollRight');
+    const indicators = document.querySelectorAll('.scroll-indicator');
+    
+    if (!scrollContainer || !scrollContent || !scrollLeft || !scrollRight) {
+        return; // Exit if elements don't exist
+    }
+
+    let currentIndex = 0;
+    const totalCards = document.querySelectorAll('.category-scroll-card').length;
+    const cardsPerView = 3; // Show 3 cards at a time
+    const maxIndex = Math.max(0, totalCards - cardsPerView);
+
+    // Calculate scroll distance based on container width
+    function getScrollDistance() {
+        const containerWidth = scrollContainer.offsetWidth;
+        const gap = parseFloat(getComputedStyle(scrollContent).gap) || 24;
+        return containerWidth + gap; // Scroll by full container width
+    }
+
+    // Update scroll indicators
+    function updateIndicators() {
+        if (indicators.length === 0) return;
+        
+        const totalPages = Math.ceil(totalCards / cardsPerView);
+        const currentPage = Math.floor(currentIndex / cardsPerView);
+        
+        indicators.forEach((indicator, index) => {
+            indicator.classList.toggle('active', index === currentPage);
+        });
+    }
+
+    // Update button states
+    function updateButtons() {
+        scrollLeft.style.opacity = currentIndex === 0 ? '0.5' : '1';
+        scrollLeft.style.pointerEvents = currentIndex === 0 ? 'none' : 'auto';
+        
+        scrollRight.style.opacity = currentIndex >= maxIndex ? '0.5' : '1';
+        scrollRight.style.pointerEvents = currentIndex >= maxIndex ? 'none' : 'auto';
+    }
+
+    // Scroll to specific position
+    function scrollToPosition(index) {
+        const scrollDistance = getScrollDistance();
+        const scrollPosition = index * (scrollDistance / cardsPerView);
+        
+        scrollContainer.scrollTo({
+            left: scrollPosition,
+            behavior: 'smooth'
+        });
+        
+        currentIndex = Math.max(0, Math.min(index, maxIndex));
+        updateIndicators();
+        updateButtons();
+    }
+
+    // Scroll by 3 cards (one full view)
+    function scrollByCards(direction) {
+        const newIndex = direction > 0 
+            ? Math.min(currentIndex + cardsPerView, maxIndex)
+            : Math.max(currentIndex - cardsPerView, 0);
+        
+        scrollToPosition(newIndex);
+    }
+
+    // Left scroll button - scroll back by 3 cards
+    scrollLeft.addEventListener('click', () => {
+        if (currentIndex > 0) {
+            scrollByCards(-1);
+        }
+    });
+
+    // Right scroll button - scroll forward by 3 cards
+    scrollRight.addEventListener('click', () => {
+        if (currentIndex < maxIndex) {
+            scrollByCards(1);
+        }
+    });
+
+    // Scroll indicators click
+    indicators.forEach((indicator, index) => {
+        indicator.addEventListener('click', () => {
+            const targetIndex = index * cardsPerView;
+            scrollToPosition(Math.min(targetIndex, maxIndex));
+        });
+    });
+
+    // Handle manual scroll with improved detection
+    let scrollTimeout;
+    scrollContainer.addEventListener('scroll', () => {
+        clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(() => {
+            const scrollPosition = scrollContainer.scrollLeft;
+            const scrollDistance = getScrollDistance();
+            const cardScrollWidth = scrollDistance / cardsPerView;
+            const newIndex = Math.round(scrollPosition / cardScrollWidth);
+            
+            if (newIndex !== currentIndex && newIndex >= 0 && newIndex <= maxIndex) {
+                currentIndex = newIndex;
+                updateIndicators();
+                updateButtons();
+            }
+        }, 150);
+    });
+
+    // Enhanced touch/swipe support for mobile
+    let startX = 0;
+    let scrollStartLeft = 0;
+    let isDragging = false;
+
+    scrollContainer.addEventListener('touchstart', (e) => {
+        startX = e.touches[0].clientX;
+        scrollStartLeft = scrollContainer.scrollLeft;
+        isDragging = true;
+    });
+
+    scrollContainer.addEventListener('touchmove', (e) => {
+        if (!startX || !isDragging) return;
+        
+        e.preventDefault();
+        const currentX = e.touches[0].clientX;
+        const diffX = startX - currentX;
+        scrollContainer.scrollLeft = scrollStartLeft + diffX;
+    });
+
+    scrollContainer.addEventListener('touchend', (e) => {
+        if (!isDragging) return;
+        
+        const endX = e.changedTouches[0].clientX;
+        const diffX = startX - endX;
+        const threshold = 50; // Minimum swipe distance
+        
+        if (Math.abs(diffX) > threshold) {
+            if (diffX > 0 && currentIndex < maxIndex) {
+                // Swipe left - scroll right
+                scrollByCards(1);
+            } else if (diffX < 0 && currentIndex > 0) {
+                // Swipe right - scroll left
+                scrollByCards(-1);
+            }
+        }
+        
+        startX = 0;
+        scrollStartLeft = 0;
+        isDragging = false;
+    });
+
+    // Keyboard navigation
+    scrollContainer.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowLeft') {
+            e.preventDefault();
+            scrollLeft.click();
+        } else if (e.key === 'ArrowRight') {
+            e.preventDefault();
+            scrollRight.click();
+        }
+    });
+
+    // Initialize states
+    updateIndicators();
+    updateButtons();
+
+    // Handle window resize with debouncing
+    let resizeTimeout;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+            // Recalculate max index based on new screen size
+            const newMaxIndex = Math.max(0, totalCards - cardsPerView);
+            
+            if (currentIndex > newMaxIndex) {
+                scrollToPosition(newMaxIndex);
+            } else {
+                updateButtons();
+                updateIndicators();
+            }
+        }, 250);
+    });
+
+    // Auto-scroll functionality (optional)
+    let autoScrollInterval;
+    
+    function startAutoScroll() {
+        autoScrollInterval = setInterval(() => {
+            if (currentIndex >= maxIndex) {
+                scrollToPosition(0); // Reset to beginning
+            } else {
+                scrollByCards(1);
+            }
+        }, 5000); // Auto-scroll every 5 seconds
+    }
+
+    function stopAutoScroll() {
+        clearInterval(autoScrollInterval);
+    }
+
+    // Pause auto-scroll on hover
+    scrollContainer.addEventListener('mouseenter', stopAutoScroll);
+    scrollContainer.addEventListener('mouseleave', startAutoScroll);
+    
+    // Pause auto-scroll on touch
+    scrollContainer.addEventListener('touchstart', stopAutoScroll);
+    
+    // Start auto-scroll (uncomment if you want auto-scrolling)
+    // startAutoScroll();
 }
 
 // Color swatch interactions removed as per requirements

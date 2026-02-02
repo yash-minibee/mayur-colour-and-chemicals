@@ -14,7 +14,7 @@
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top border-bottom" id="navbar">
         <div class="container-lg">
-            <a class="navbar-brand" href="index.html">
+            <a class="navbar-brand" href="index.php">
                 <img src="assets/images/logo-20-282-29.jpg" alt="Mayur Colour & Chemicals" height="50">
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -22,11 +22,11 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <div class="navbar-nav mx-auto text-center gap-4">
-                    <a class="nav-link" href="index.html">Home</a>
-                    <a class="nav-link" href="about.html">About</a>
-                    <a class="nav-link" href="products.html">Products</a>
-                    <a class="nav-link" href="index.html#quality">QC</a>
-                    <a class="nav-link active" href="contact.html">Contact</a>
+                    <a class="nav-link" href="index.php">Home</a>
+                    <a class="nav-link" href="about.php">About</a>
+                    <a class="nav-link" href="products.php">Products</a>
+                    <a class="nav-link" href="index.php#quality">QC</a>
+                    <a class="nav-link active" href="contact.php">Contact</a>
                 </div>
             </div>
         </div>
@@ -302,7 +302,7 @@
                 enhance your products and drive your business forward.</p>
             <div class="d-flex flex-column flex-sm-row gap-2 gap-sm-3 justify-content-center fade-in-up stagger-2">
                 <a href="#contactForm" class="btn btn-light btn-lg">Get Quote</a>
-                <a href="products.html" class="btn btn-outline-light btn-lg">View Products</a>
+                <a href="products.php" class="btn btn-outline-light btn-lg">View Products</a>
             </div>
         </div>
     </section>
@@ -318,10 +318,10 @@
                 <div class="col-md-3">
                     <h6 class="fw-bold mb-3">Quick Links</h6>
                     <ul class="list-unstyled small">
-                        <li><a href="about.html" class="text-white-50 text-decoration-none">About Us</a></li>
-                        <li><a href="products.html" class="text-white-50 text-decoration-none">Products</a></li>
-                        <li><a href="index.html#quality" class="text-white-50 text-decoration-none">Quality</a></li>
-                        <li><a href="contact.html" class="text-white-50 text-decoration-none">Contact</a></li>
+                        <li><a href="about.php" class="text-white-50 text-decoration-none">About Us</a></li>
+                        <li><a href="products.php" class="text-white-50 text-decoration-none">Products</a></li>
+                        <li><a href="index.php#quality" class="text-white-50 text-decoration-none">Quality</a></li>
+                        <li><a href="contact.php" class="text-white-50 text-decoration-none">Contact</a></li>
                     </ul>
                 </div>
                 <div class="col-md-3">
