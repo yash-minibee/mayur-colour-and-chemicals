@@ -54,7 +54,13 @@ switch ($method) {
         $stmt->bindValue(':icon', $data['icon'], SQLITE3_TEXT);
         $stmt->execute();
 
-        echo json_encode(['status' => 'success']);
+        echo json_encode([
+            'status' => 'success',
+            'message' => empty($data['id'])
+                ? 'Category created successfully'
+                : 'Category updated successfully'
+        ]);
+
         break;
 
     // 🔹 DELETE (WITH PRODUCT CHECK)
@@ -67,7 +73,7 @@ switch ($method) {
             exit;
         }
 
-        $categoryId = (int)$data['id'];
+        $categoryId = (int) $data['id'];
 
         // ✅ Step 1: Check if any product uses this category
         $checkStmt = $db->prepare("

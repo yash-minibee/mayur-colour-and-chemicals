@@ -22,7 +22,7 @@ include "./partials/header.php";
             <div class="card border-0 shadow-sm mb-4">
                 <div class="card-body">
                     <div class="row g-3 mobile-search-row">
-                        <div class="col-md-8">
+                        <div class="col-md-9">
                             <label class="form-label">Search Products</label>
                             <div class="input-group">
                                 <input type="text" class="form-control" placeholder="Search products..."
@@ -32,18 +32,16 @@ include "./partials/header.php";
                                 </button>
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <label class="form-label d-none d-md-block">&nbsp;</label>
-                            <div class="d-flex gap-2 mobile-buttons">
-                                <button class="btn btn-outline-secondary btn-touch" id="resetFilters">
-                                    <i class="bi bi-arrow-clockwise me-1"></i>
-                                    <span>Reset</span>
-                                </button>
-                                <button class="btn btn-outline-primary btn-touch" id="exportProducts">
+                            <button class="btn btn-outline-primary btn-touch w-100" id="exportProducts">
                                     <i class="bi bi-download me-1"></i>
                                     <span>Export</span>
                                 </button>
-                            </div>
+                            <!-- <div class="d-flex gap-2 mobile-buttons">
+                                
+                                
+                            </div> -->
                         </div>
                     </div>
                 </div>
@@ -56,7 +54,7 @@ include "./partials/header.php";
                         <table class="table table-hover mb-0 tablet-table" id="productsTable">
                             <thead class="table-light">
                                 <tr>
-                                    <th scope="col" class="border-0 ps-4">ID</th>
+                                    <th scope="col" class="border-0 ps-4">#</th>
                                     <th scope="col" class="border-0">Product Name</th>
                                     <th scope="col" class="border-0">Category</th>
                                     <th scope="col" class="border-0">Color Shade</th>
@@ -199,6 +197,18 @@ include "./partials/header.php";
             </div>
         </div>
     </div>
+    
+    <!-- Toast Container -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1100">
+        <div id="notificationToast" class="toast align-items-center border-0" role="alert">
+            <div class="d-flex">
+                <div class="toast-body"></div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto"
+                    data-bs-dismiss="toast"></button>
+            </div>
+        </div>
+    </div>
+
 
     <!-- Bootstrap 5 JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

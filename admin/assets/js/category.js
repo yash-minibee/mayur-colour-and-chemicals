@@ -122,7 +122,7 @@ function handleSaveCategory() {
         document.querySelector('input[name="categoryIcon"]:checked')?.value || "bi-tag";
 
     if (!name) {
-        showNotification("Category name required", "warning");
+        showNotification("Category name is required", "warning");
         return;
     }
 
@@ -137,14 +137,22 @@ function handleSaveCategory() {
         })
     })
         .then(res => res.json())
-        .then(() => {
+        .then(data => {
             loadCategories();
             bootstrap.Modal.getInstance(
                 document.getElementById("addCategoryModal")
             ).hide();
-            showNotification("Category saved successfully", "success");
+
+            showNotification(
+                data.message || "Category saved successfully",
+                "success"
+            );
+        })
+        .catch(() => {
+            showNotification("Failed to save category", "danger");
         });
 }
+
 
 /* ===============================
    DELETE
@@ -163,15 +171,34 @@ function handleDeleteCategory() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id: currentEditingId })
     })
-        .then(res => res.json())
-        .then(() => {
+        .then(async res => {
+            const data = await res.json();
+
+            if (!res.ok) {
+                throw data;
+            }
+
+            return data;
+        })
+        .then(data => {
             loadCategories();
             bootstrap.Modal.getInstance(
                 document.getElementById("deleteCategoryModal")
             ).hide();
-            showNotification("Category deleted", "success");
+
+            showNotification(
+                data.message || "Category deleted successfully",
+                "success"
+            );
+        })
+        .catch(err => {
+            showNotification(
+                err.message || "Unable to delete category",
+                "danger"
+            );
         });
 }
+
 
 /* ===============================
    FILTERS
@@ -211,14 +238,27 @@ function formatDate(date) {
     });
 }
 
-function showNotification(msg, type = "info") {
-    const alert = document.createElement("div");
-    alert.className = `alert alert-${type} position-fixed top-0 end-0 m-3`;
-    alert.style.zIndex = 9999;
-    alert.textContent = msg;
-    document.body.appendChild(alert);
-    setTimeout(() => alert.remove(), 3000);
+function showNotification(message, type = "info") {
+    const toastEl = document.getElementById("notificationToast");
+    const toastBody = toastEl.querySelector(".toast-body");
+
+    const icons = {
+        success: "bi-check-circle-fill",
+        danger: "bi-x-circle-fill",
+        warning: "bi-exclamation-triangle-fill",
+        info: "bi-info-circle-fill"
+    };
+
+    toastEl.className = `toast align-items-center text-bg-${type} border-0`;
+    toastBody.innerHTML = `
+        <i class="bi ${icons[type] || icons.info} me-2"></i>
+        ${message}
+    `;
+
+    const toast = new bootstrap.Toast(toastEl, { delay: 3500 });
+    toast.show();
 }
+
 
 /* ===============================
    EVENTS

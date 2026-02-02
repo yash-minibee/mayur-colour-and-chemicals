@@ -107,10 +107,10 @@ function renderProducts() {
         return;
     }
 
-    filteredProducts.forEach(p => {
+    filteredProducts.forEach((p , index) => {
         tbody.innerHTML += `
             <tr>
-                <td class="ps-4">${p.product_id}</td>
+                <td class="ps-4">${index+1}</td>
                 <td>${p.product_name}</td>
                 <td><span class="badge bg-secondary">${p.category_name}</span></td>
                 <td>
@@ -204,11 +204,27 @@ saveProductBtn.addEventListener('click', () => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
-    }).then(() => {
+    })
+    .then(async res => {
+        const data = await res.json();
+        if (!res.ok) throw data;
+        return data;
+    })
+    .then(data => {
         addProductModal.hide();
         loadProducts();
-        showNotification('Product saved successfully', 'success');
+        showNotification(
+            data.message || 'Product saved successfully',
+            'success'
+        );
+    })
+    .catch(err => {
+        showNotification(
+            err.error || 'Failed to save product',
+            'danger'
+        );
     });
+    
 });
 
 /* ===============================
@@ -221,11 +237,27 @@ function deleteProduct(id) {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ product_id: id })
-    }).then(() => {
-        loadProducts();
-        showNotification('Product deleted', 'success');
-    });
+    })
+        .then(async res => {
+            const data = await res.json();
+            if (!res.ok) throw data;
+            return data;
+        })
+        .then(data => {
+            loadProducts();
+            showNotification(
+                data.message || 'Product deleted successfully',
+                'success'
+            );
+        })
+        .catch(err => {
+            showNotification(
+                err.error || 'Unable to delete product',
+                'danger'
+            );
+        });
 }
+
 
 /* ===============================
    HELPERS
@@ -234,13 +266,27 @@ function updateSearchResults() {
     paginationInfo.textContent = `Showing ${filteredProducts.length} products`;
 }
 
-function showNotification(msg, type) {
-    const div = document.createElement('div');
-    div.className = `alert alert-${type} position-fixed top-0 end-0 m-3`;
-    div.innerText = msg;
-    document.body.appendChild(div);
-    setTimeout(() => div.remove(), 3000);
+function showNotification(message, type = "info") {
+    const toastEl = document.getElementById("notificationToast");
+    const toastBody = toastEl.querySelector(".toast-body");
+
+    const icons = {
+        success: "bi-check-circle-fill",
+        danger: "bi-x-circle-fill",
+        warning: "bi-exclamation-triangle-fill",
+        info: "bi-info-circle-fill"
+    };
+
+    toastEl.className = `toast align-items-center text-bg-${type} border-0`;
+    toastBody.innerHTML = `
+        <i class="bi ${icons[type] || icons.info} me-2"></i>
+        ${message}
+    `;
+
+    const toast = new bootstrap.Toast(toastEl, { delay: 3500 });
+    toast.show();
 }
+
 
 /* ===============================
    CLEANUP ON MODAL CLOSE

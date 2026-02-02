@@ -109,7 +109,13 @@ if ($method === 'POST') {
 
     $stmt->execute();
 
-    echo json_encode(["success" => true]);
+    echo json_encode([
+        "success" => true,
+        "message" => empty($input['product_id'])
+            ? "Product added successfully"
+            : "Product updated successfully"
+    ]);
+    
     exit;
 }
 
@@ -132,7 +138,11 @@ if ($method === 'DELETE') {
     $stmt->bindValue(':product_id', $input['product_id'], SQLITE3_INTEGER);
     $stmt->execute();
 
-    echo json_encode(["success" => true]);
+    echo json_encode([
+        "success" => true,
+        "message" => "Product deleted successfully"
+    ]);
+    
     exit;
 }
 
