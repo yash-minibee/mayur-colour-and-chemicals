@@ -13,11 +13,17 @@
         <!-- Header Section - Responsive -->
         <div class="d-flex justify-content-between align-items-center mb-4 mobile-header">
             <h2 class="mb-0">Category Management</h2>
-            <button class="btn btn-primary btn-touch" data-bs-toggle="modal"
-                data-bs-target="#addCategoryModal" onclick="openAddCategoryModal()">
-                <i class="bi bi-plus-circle me-2"></i>
-                <span>Add New Category</span>
-            </button>
+            <div class="d-flex gap-2">
+                <button class="btn btn-outline-secondary btn-sm" onclick="refreshCategoryData()" title="Refresh Data">
+                    <i class="bi bi-arrow-clockwise"></i>
+                    <span class="d-none d-sm-inline ms-1">Refresh</span>
+                </button>
+                <button class="btn btn-primary btn-touch" data-bs-toggle="modal"
+                    data-bs-target="#addCategoryModal" onclick="openAddCategoryModal()">
+                    <i class="bi bi-plus-circle me-2"></i>
+                    <span>Add New Category</span>
+                </button>
+            </div>
         </div>
 
         <!-- Stats Cards -->
@@ -30,7 +36,7 @@
                                 <i class="bi bi-tags text-white"></i>
                             </div>
                             <div class="ms-3 min-w-0">
-                                <div class="stats-number" id="totalCategories">4</div>
+                                <div class="stats-number" id="totalCategories">...</div>
                                 <div class="stats-label">Total Categories</div>
                             </div>
                         </div>
@@ -46,7 +52,7 @@
                                 <i class="bi bi-palette text-white"></i>
                             </div>
                             <div class="ms-3 min-w-0">
-                                <div class="stats-number" id="totalProducts">248</div>
+                                <div class="stats-number" id="totalProducts">...</div>
                                 <div class="stats-label">Total Products</div>
                             </div>
                         </div>

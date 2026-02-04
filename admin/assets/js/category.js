@@ -13,6 +13,11 @@ document.addEventListener("DOMContentLoaded", () => {
     loadCategories();
     initializeCategoryEventListeners();
     initializeCategoryFilters();
+    
+    // Auto-refresh every 5 minutes
+    setInterval(() => {
+        updateCategoryStats();
+    }, 300000);
 });
 
 /* ===============================
@@ -32,6 +37,25 @@ function loadCategories() {
             showNotification("Failed to load categories", "danger");
         });
 }
+
+// Function to refresh all category data
+function refreshCategoryData() {
+    // Show loading state
+    const categoriesEl = document.getElementById("totalCategories");
+    const productsEl = document.getElementById("totalProducts");
+    
+    if (categoriesEl) categoriesEl.textContent = '...';
+    if (productsEl) productsEl.textContent = '...';
+    
+    // Reload categories (which will also update stats)
+    loadCategories();
+    
+    // Show notification
+    showNotification("Data refreshed successfully", "success");
+}
+
+// Make refresh function globally available
+window.refreshCategoryData = refreshCategoryData;
 
 /* ===============================
    RENDER TABLE
@@ -221,9 +245,64 @@ function applyCategoryFilters() {
 /* ===============================
    STATS
 ================================ */
-function updateCategoryStats() {
-    const el = document.getElementById("totalCategories");
-    if (el) el.textContent = categories.length;
+async function updateCategoryStats() {
+    // Update total categories
+    const categoriesEl = document.getElementById("totalCategories");
+    if (categoriesEl) {
+        categoriesEl.textContent = categories.length;
+    }
+    
+    // Update total products dynamically
+    try {
+        const response = await fetch('productApi.php');
+        if (response.ok) {
+            const products = await response.json();
+            const productsEl = document.getElementById("totalProducts");
+            if (productsEl) {
+                // Animate the counter
+                animateCounter(productsEl, products.length);
+            }
+        } else {
+            console.error('Failed to fetch products data');
+        }
+    } catch (error) {
+        console.error('Error fetching products:', error);
+        // Show error state with retry option
+        const productsEl = document.getElementById("totalProducts");
+        if (productsEl) {
+            productsEl.innerHTML = `
+                <span class="text-danger" style="font-size: 0.8rem; cursor: pointer;" onclick="updateCategoryStats()" title="Click to retry">
+                    Error <i class="bi bi-arrow-clockwise"></i>
+                </span>
+            `;
+        }
+    }
+}
+
+// Function to animate counter (similar to dashboard)
+function animateCounter(element, targetValue) {
+    const duration = 1000; // 1 second
+    const startTime = performance.now();
+    const startValue = 0;
+
+    function updateCounter(currentTime) {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        
+        // Easing function for smooth animation
+        const easeOutQuart = 1 - Math.pow(1 - progress, 4);
+        const currentValue = Math.floor(startValue + (targetValue - startValue) * easeOutQuart);
+        
+        element.textContent = currentValue;
+
+        if (progress < 1) {
+            requestAnimationFrame(updateCounter);
+        } else {
+            element.textContent = targetValue;
+        }
+    }
+
+    requestAnimationFrame(updateCounter);
 }
 
 /* ===============================

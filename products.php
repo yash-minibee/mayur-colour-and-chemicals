@@ -8,6 +8,8 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/brands.min.css">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet">
@@ -29,7 +31,7 @@
                     <a class="nav-link" href="index.php">Home</a>
                     <a class="nav-link" href="about.php">About</a>
                     <a class="nav-link active" href="products.php">Products</a>
-                    <a class="nav-link" href="index.php#quality">QC</a>
+                    <a class="nav-link" href="quality-policy.php">Quality Policy</a>
                     <a class="nav-link" href="contact.php">Contact</a>
                 </div>
             </div>
@@ -59,135 +61,39 @@
 
     <!-- Product Categories Horizontal Scroll Section -->
     <section class="py-5 py-md-6">
-        <div class="container-lg">
-            <div class="text-center mb-5 fade-in-down">
-                <h2 class="display-5 fw-bold mb-3">Product Categories</h2>
-                <p class="lead text-muted max-w-2xl mx-auto">Explore our diverse range of high-quality colorants
-                    designed for various industrial applications</p>
-            </div>
+    <div class="container-lg">
 
-            <!-- Categories Horizontal Scroll Container -->
-            <div class="categories-scroll-container position-relative">
-                <!-- Scroll Navigation Buttons -->
-                <button class="categories-scroll-btn categories-scroll-left" id="scrollLeft" aria-label="Scroll Left">
-                    <i class="fas fa-chevron-left"></i>
-                </button>
-                <button class="categories-scroll-btn categories-scroll-right" id="scrollRight" aria-label="Scroll Right">
-                    <i class="fas fa-chevron-right"></i>
-                </button>
-
-                <!-- Scrollable Categories -->
-                <div class="categories-horizontal-scroll" id="categoriesScroll">
-                    <div class="categories-scroll-content">
-                        <!-- Premium Pigments Card -->
-                        <div class="category-scroll-card" data-category="pigments">
-                            <div class="category-card-content">
-                                <div class="category-card-icon">
-                                    <i class="fas fa-palette"></i>
-                                </div>
-                                <h4 class="category-card-title">Premium Pigments</h4>
-                                <p class="category-card-description">High-performance organic and inorganic pigments for coatings, plastics, and printing applications.</p>
-                                <div class="category-card-stats">
-                                    <span class="category-badge">50+ Products</span>
-                                    <span class="category-arrow">
-                                        <i class="fas fa-arrow-right"></i>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Industrial Dyes Card -->
-                        <div class="category-scroll-card" data-category="dyes">
-                            <div class="category-card-content">
-                                <div class="category-card-icon">
-                                    <i class="fas fa-tint"></i>
-                                </div>
-                                <h4 class="category-card-title">Industrial Dyes</h4>
-                                <p class="category-card-description">Acid, direct, reactive, and disperse dyes for textile, leather, and paper industries.</p>
-                                <div class="category-card-stats">
-                                    <span class="category-badge">35+ Products</span>
-                                    <span class="category-arrow">
-                                        <i class="fas fa-arrow-right"></i>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Color Masterbatch Card -->
-                        <div class="category-scroll-card" data-category="masterbatch">
-                            <div class="category-card-content">
-                                <div class="category-card-icon">
-                                    <i class="fas fa-cube"></i>
-                                </div>
-                                <h4 class="category-card-title">Color Masterbatch</h4>
-                                <p class="category-card-description">Concentrated color additives for plastic processing and polymer applications.</p>
-                                <div class="category-card-stats">
-                                    <span class="category-badge">25+ Products</span>
-                                    <span class="category-arrow">
-                                        <i class="fas fa-arrow-right"></i>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Specialty Colors Card -->
-                        <div class="category-scroll-card" data-category="specialty">
-                            <div class="category-card-content">
-                                <div class="category-card-icon">
-                                    <i class="fas fa-star"></i>
-                                </div>
-                                <h4 class="category-card-title">Specialty Colors</h4>
-                                <p class="category-card-description">Metallic, pearlescent, and effect pigments for premium applications.</p>
-                                <div class="category-card-stats">
-                                    <span class="category-badge">20+ Products</span>
-                                    <span class="category-arrow">
-                                        <i class="fas fa-arrow-right"></i>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Colorants Card -->
-                        <div class="category-scroll-card" data-category="colorants">
-                            <div class="category-card-content">
-                                <div class="category-card-icon">
-                                    <i class="fas fa-paint-brush"></i>
-                                </div>
-                                <h4 class="category-card-title">Specialty Colorants</h4>
-                                <p class="category-card-description">Advanced colorants for automotive, cosmetic, and high-end applications.</p>
-                                <div class="category-card-stats">
-                                    <span class="category-badge">30+ Products</span>
-                                    <span class="category-arrow">
-                                        <i class="fas fa-arrow-right"></i>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Additives Card -->
-                        <div class="category-scroll-card" data-category="additives">
-                            <div class="category-card-content">
-                                <div class="category-card-icon">
-                                    <i class="fas fa-flask"></i>
-                                </div>
-                                <h4 class="category-card-title">Chemical Additives</h4>
-                                <p class="category-card-description">Performance enhancers and modifiers for improved color stability and processing.</p>
-                                <div class="category-card-stats">
-                                    <span class="category-badge">15+ Products</span>
-                                    <span class="category-arrow">
-                                        <i class="fas fa-arrow-right"></i>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Scroll Indicators -->
-                
-            </div>
+        <div class="text-center mb-5 fade-in-down">
+            <h2 class="display-5 fw-bold mb-3">Product Categories</h2>
+            <p class="lead text-muted max-w-2xl mx-auto">
+                Explore our diverse range of high-quality colorants
+            </p>
         </div>
-    </section>
+
+        <!-- 🔥 SCROLL WRAPPER -->
+        <div class="categories-scroll-wrapper position-relative">
+
+            <!-- LEFT BUTTON -->
+            <button id="scrollLeft" class="category-scroll-btn left">
+                <i class="fa-solid fa-chevron-left"></i>
+            </button>
+
+            <!-- SCROLL CONTAINER (THIS WAS MISSING) -->
+            <div id="categoriesScroll" class="categories-scroll-container">
+                <div class="categories-scroll-content" id="categoryScrollContent">
+                    <!-- Dynamic category cards -->
+                </div>
+            </div>
+
+            <!-- RIGHT BUTTON (MISSING BEFORE) -->
+            <button id="scrollRight" class="category-scroll-btn right">
+                <i class="fa-solid fa-chevron-right"></i>
+            </button>
+
+        </div>
+    </div>
+</section>
+
 
     <!-- Product Filter Section -->
     <section class="py-4 bg-light">

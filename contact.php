@@ -25,7 +25,7 @@
                     <a class="nav-link" href="index.php">Home</a>
                     <a class="nav-link" href="about.php">About</a>
                     <a class="nav-link" href="products.php">Products</a>
-                    <a class="nav-link" href="index.php#quality">QC</a>
+                    <a class="nav-link" href="quality-policy.php">Quality Policy</a>
                     <a class="nav-link active" href="contact.php">Contact</a>
                 </div>
             </div>

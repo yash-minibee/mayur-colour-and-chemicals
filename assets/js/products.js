@@ -12,6 +12,23 @@ const CATEGORY_API = 'admin/categoryApi.php';
 
 
 
+// DOM Elements
+const productGrid = document.getElementById('productGrid');
+const filterButtons = document.querySelectorAll('.products-filter-btn');
+
+
+// Initialize page
+document.addEventListener('DOMContentLoaded', function () { 
+    loadCategories();        // filter buttons
+    loadCategoryCards();     // ✅ CATEGORY CARDS (IMPORTANT)
+    loadProducts();          // products
+    initializeAnimations();
+});
+
+
+
+
+
 // Load Categories
 async function loadCategories() {
     try {
@@ -45,6 +62,47 @@ async function loadCategories() {
 }
 
 
+// Load Category Cards (Horizontal Scroll)
+async function loadCategoryCards() {
+    try {
+        const res = await fetch(CATEGORY_API);
+        const categories = await res.json();
+
+        const container = document.getElementById('categoryScrollContent');
+        container.innerHTML = '';
+
+        categories.forEach(cat => {
+            const categorySlug = cat.category_name.toLowerCase();
+
+            container.innerHTML += `
+                <div class="category-scroll-card" data-category="${categorySlug}">
+                    <div class="category-card-content">
+                        <div class="category-card-icon p-4">
+                            <i class="${cat.category_icon || 'fas fa-palette'}"></i>
+                        </div>
+                        <h4 class="category-card-title">${cat.category_name}</h4>
+                        <p class="category-card-description">
+                            ${cat.category_description || 'High quality colour solutions'}
+                        </p>
+                        <div class="category-card-stats">
+                            <span class="category-badge">Explore</span>
+                            <span class="category-arrow">
+                                <i class="fas fa-arrow-right"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+
+        initializeCategoryCards();   // rebind click
+        initializeCategoryScroll();  // rebind scroll
+    } catch (err) {
+        console.error('Failed to load category cards', err);
+    }
+}
+
+
 
 // Load Products 
 async function loadProducts() {
@@ -69,23 +127,6 @@ async function loadProducts() {
         showNotification('Failed to load products', 'danger');
     }
 }
-
-
-
-// DOM Elements
-const productGrid = document.getElementById('productGrid');
-const filterButtons = document.querySelectorAll('.products-filter-btn');
-const categoryCards = document.querySelectorAll('.products-category-card');
-
-// Initialize page
-document.addEventListener('DOMContentLoaded', function () { 
-    initializeFilters(); // 👈 once
-    loadCategories();   // 👈 first
-    loadProducts();     // 👈 then products
-    initializeCategoryCards();
-    initializeAnimations();
-    initializeCategoryScroll(); // 👈 initialize scroll functionality
-});
 
 // Render products
 function renderProducts(productsToRender) {
@@ -191,23 +232,28 @@ function filterProducts(category) {
 
 // Initialize category cards
 function initializeCategoryCards() {
-    categoryCards.forEach(card => {
+    document.querySelectorAll('.category-scroll-card').forEach(card => {
         card.addEventListener('click', function () {
             const category = this.dataset.category;
 
-            // Update filter button
-            filterButtons.forEach(btn => btn.classList.remove('active'));
-            document.querySelector(`[data-filter="${category}"]`).classList.add('active');
+            // Update filter buttons
+            document
+                .querySelectorAll('.products-filter-btn')
+                .forEach(btn => btn.classList.remove('active'));
 
-            // Filter products and scroll to section
+            const activeBtn = document.querySelector(`[data-filter="${category}"]`);
+            if (activeBtn) activeBtn.classList.add('active');
+
+            // Filter + scroll
             filterProducts(category);
-            document.querySelector('#productGrid').scrollIntoView({
+            document.getElementById('productGrid').scrollIntoView({
                 behavior: 'smooth',
                 block: 'start'
             });
         });
     });
 }
+
 
 // Toggle product in inquiry cart
 function toggleInquiry(productId) {
@@ -514,213 +560,150 @@ function initializeAnimations() {
 // Initialize Category Scroll functionality - Updated for 3 cards at a time
 function initializeCategoryScroll() {
     const scrollContainer = document.getElementById('categoriesScroll');
-    const scrollContent = document.querySelector('.categories-scroll-content');
+    const scrollContent = document.getElementById('categoryScrollContent');
     const scrollLeft = document.getElementById('scrollLeft');
     const scrollRight = document.getElementById('scrollRight');
     const indicators = document.querySelectorAll('.scroll-indicator');
-    
+
     if (!scrollContainer || !scrollContent || !scrollLeft || !scrollRight) {
-        return; // Exit if elements don't exist
+        return;
     }
 
     let currentIndex = 0;
-    const totalCards = document.querySelectorAll('.category-scroll-card').length;
-    const cardsPerView = 3; // Show 3 cards at a time
-    const maxIndex = Math.max(0, totalCards - cardsPerView);
+    const cards = scrollContent.querySelectorAll('.category-scroll-card');
+    const totalCards = cards.length;
 
-    // Calculate scroll distance based on container width
-    function getScrollDistance() {
-        const containerWidth = scrollContainer.offsetWidth;
-        const gap = parseFloat(getComputedStyle(scrollContent).gap) || 24;
-        return containerWidth + gap; // Scroll by full container width
+    if (totalCards === 0) return;
+
+    let cardsPerView = 1;
+
+    function updateCardsPerView() {
+        if (window.innerWidth < 576) cardsPerView = 1;
+        else if (window.innerWidth < 992) cardsPerView = 1;
+        else cardsPerView = 1;
     }
 
-    // Update scroll indicators
+    updateCardsPerView();
+
+    function getCardWidth() {
+        const card = cards[0];
+        const style = getComputedStyle(card);
+        const gap = parseFloat(getComputedStyle(scrollContent).gap) || 24;
+        return card.offsetWidth + gap;
+    }
+
+    function getMaxIndex() {
+        return Math.max(0, totalCards - cardsPerView);
+    }
+
+    function updateButtons() {
+        scrollLeft.style.opacity = currentIndex === 0 ? '0.4' : '1';
+        scrollLeft.style.pointerEvents = currentIndex === 0 ? 'none' : 'auto';
+
+        scrollRight.style.opacity = currentIndex >= getMaxIndex() ? '0.4' : '1';
+        scrollRight.style.pointerEvents = currentIndex >= getMaxIndex() ? 'none' : 'auto';
+    }
+
     function updateIndicators() {
-        if (indicators.length === 0) return;
-        
+        if (!indicators.length) return;
+
         const totalPages = Math.ceil(totalCards / cardsPerView);
         const currentPage = Math.floor(currentIndex / cardsPerView);
-        
-        indicators.forEach((indicator, index) => {
-            indicator.classList.toggle('active', index === currentPage);
+
+        indicators.forEach((dot, i) => {
+            dot.classList.toggle('active', i === currentPage && i < totalPages);
         });
     }
 
-    // Update button states
-    function updateButtons() {
-        scrollLeft.style.opacity = currentIndex === 0 ? '0.5' : '1';
-        scrollLeft.style.pointerEvents = currentIndex === 0 ? 'none' : 'auto';
-        
-        scrollRight.style.opacity = currentIndex >= maxIndex ? '0.5' : '1';
-        scrollRight.style.pointerEvents = currentIndex >= maxIndex ? 'none' : 'auto';
-    }
+    function scrollToIndex(index) {
+        currentIndex = Math.max(0, Math.min(index, getMaxIndex()));
 
-    // Scroll to specific position
-    function scrollToPosition(index) {
-        const scrollDistance = getScrollDistance();
-        const scrollPosition = index * (scrollDistance / cardsPerView);
-        
         scrollContainer.scrollTo({
-            left: scrollPosition,
+            left: currentIndex * getCardWidth(),
             behavior: 'smooth'
         });
-        
-        currentIndex = Math.max(0, Math.min(index, maxIndex));
-        updateIndicators();
+
         updateButtons();
+        updateIndicators();
     }
 
-    // Scroll by 3 cards (one full view)
-    function scrollByCards(direction) {
-        const newIndex = direction > 0 
-            ? Math.min(currentIndex + cardsPerView, maxIndex)
-            : Math.max(currentIndex - cardsPerView, 0);
-        
-        scrollToPosition(newIndex);
+    function scrollByView(direction) {
+        scrollToIndex(
+            direction > 0
+                ? currentIndex + cardsPerView
+                : currentIndex - cardsPerView
+        );
     }
 
-    // Left scroll button - scroll back by 3 cards
-    scrollLeft.addEventListener('click', () => {
-        if (currentIndex > 0) {
-            scrollByCards(-1);
-        }
-    });
+    // Button events
+    scrollLeft.addEventListener('click', () => scrollByView(-1));
+    scrollRight.addEventListener('click', () => scrollByView(1));
 
-    // Right scroll button - scroll forward by 3 cards
-    scrollRight.addEventListener('click', () => {
-        if (currentIndex < maxIndex) {
-            scrollByCards(1);
-        }
-    });
-
-    // Scroll indicators click
-    indicators.forEach((indicator, index) => {
-        indicator.addEventListener('click', () => {
-            const targetIndex = index * cardsPerView;
-            scrollToPosition(Math.min(targetIndex, maxIndex));
+    // Indicator click
+    indicators.forEach((dot, index) => {
+        dot.addEventListener('click', () => {
+            scrollToIndex(index * cardsPerView);
         });
     });
 
-    // Handle manual scroll with improved detection
+    // Sync on manual scroll
     let scrollTimeout;
     scrollContainer.addEventListener('scroll', () => {
         clearTimeout(scrollTimeout);
         scrollTimeout = setTimeout(() => {
-            const scrollPosition = scrollContainer.scrollLeft;
-            const scrollDistance = getScrollDistance();
-            const cardScrollWidth = scrollDistance / cardsPerView;
-            const newIndex = Math.round(scrollPosition / cardScrollWidth);
-            
-            if (newIndex !== currentIndex && newIndex >= 0 && newIndex <= maxIndex) {
-                currentIndex = newIndex;
-                updateIndicators();
+            const newIndex = Math.round(scrollContainer.scrollLeft / getCardWidth());
+            if (newIndex !== currentIndex) {
+                currentIndex = Math.max(0, Math.min(newIndex, getMaxIndex()));
                 updateButtons();
+                updateIndicators();
             }
-        }, 150);
+        }, 120);
     });
 
-    // Enhanced touch/swipe support for mobile
+    // Touch support
     let startX = 0;
-    let scrollStartLeft = 0;
-    let isDragging = false;
+    let startScrollLeft = 0;
 
-    scrollContainer.addEventListener('touchstart', (e) => {
+    scrollContainer.addEventListener('touchstart', e => {
         startX = e.touches[0].clientX;
-        scrollStartLeft = scrollContainer.scrollLeft;
-        isDragging = true;
+        startScrollLeft = scrollContainer.scrollLeft;
     });
 
-    scrollContainer.addEventListener('touchmove', (e) => {
-        if (!startX || !isDragging) return;
-        
-        e.preventDefault();
-        const currentX = e.touches[0].clientX;
-        const diffX = startX - currentX;
-        scrollContainer.scrollLeft = scrollStartLeft + diffX;
+    scrollContainer.addEventListener('touchmove', e => {
+        if (!startX) return;
+        const diff = startX - e.touches[0].clientX;
+        scrollContainer.scrollLeft = startScrollLeft + diff;
     });
 
-    scrollContainer.addEventListener('touchend', (e) => {
-        if (!isDragging) return;
-        
-        const endX = e.changedTouches[0].clientX;
-        const diffX = startX - endX;
-        const threshold = 50; // Minimum swipe distance
-        
-        if (Math.abs(diffX) > threshold) {
-            if (diffX > 0 && currentIndex < maxIndex) {
-                // Swipe left - scroll right
-                scrollByCards(1);
-            } else if (diffX < 0 && currentIndex > 0) {
-                // Swipe right - scroll left
-                scrollByCards(-1);
-            }
-        }
-        
+    scrollContainer.addEventListener('touchend', () => {
+        const newIndex = Math.round(scrollContainer.scrollLeft / getCardWidth());
+        scrollToIndex(newIndex);
         startX = 0;
-        scrollStartLeft = 0;
-        isDragging = false;
     });
 
-    // Keyboard navigation
-    scrollContainer.addEventListener('keydown', (e) => {
-        if (e.key === 'ArrowLeft') {
-            e.preventDefault();
-            scrollLeft.click();
-        } else if (e.key === 'ArrowRight') {
-            e.preventDefault();
-            scrollRight.click();
-        }
+    // Keyboard
+    scrollContainer.setAttribute('tabindex', '0');
+    scrollContainer.addEventListener('keydown', e => {
+        if (e.key === 'ArrowLeft') scrollByView(-1);
+        if (e.key === 'ArrowRight') scrollByView(1);
     });
 
-    // Initialize states
-    updateIndicators();
-    updateButtons();
-
-    // Handle window resize with debouncing
-    let resizeTimeout;
+    // Resize handling
+    let resizeTimer;
     window.addEventListener('resize', () => {
-        clearTimeout(resizeTimeout);
-        resizeTimeout = setTimeout(() => {
-            // Recalculate max index based on new screen size
-            const newMaxIndex = Math.max(0, totalCards - cardsPerView);
-            
-            if (currentIndex > newMaxIndex) {
-                scrollToPosition(newMaxIndex);
-            } else {
-                updateButtons();
-                updateIndicators();
-            }
-        }, 250);
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+            updateCardsPerView();
+            scrollToIndex(currentIndex);
+        }, 200);
     });
 
-    // Auto-scroll functionality (optional)
-    let autoScrollInterval;
-    
-    function startAutoScroll() {
-        autoScrollInterval = setInterval(() => {
-            if (currentIndex >= maxIndex) {
-                scrollToPosition(0); // Reset to beginning
-            } else {
-                scrollByCards(1);
-            }
-        }, 5000); // Auto-scroll every 5 seconds
-    }
-
-    function stopAutoScroll() {
-        clearInterval(autoScrollInterval);
-    }
-
-    // Pause auto-scroll on hover
-    scrollContainer.addEventListener('mouseenter', stopAutoScroll);
-    scrollContainer.addEventListener('mouseleave', startAutoScroll);
-    
-    // Pause auto-scroll on touch
-    scrollContainer.addEventListener('touchstart', stopAutoScroll);
-    
-    // Start auto-scroll (uncomment if you want auto-scrolling)
-    // startAutoScroll();
+    // Init
+    updateButtons();
+    updateIndicators();
 }
+
+
 
 // Color swatch interactions removed as per requirements
 

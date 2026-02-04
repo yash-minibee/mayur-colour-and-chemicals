@@ -12,10 +12,20 @@ include "./partials/header.php";
         <div class="content-area">
             <div class="d-flex justify-content-between align-items-center mb-4 dashboard-header">
                 <h2 class="mb-0">Dashboard</h2>
-                <div class="text-muted dashboard-date">
-                    <i class="bi bi-calendar3"></i>
-                    <span id="currentDate"></span>
-                </div>
+                    <div class="d-flex align-items-center gap-3">
+                        <small class="text-muted" id="lastUpdated" style="display: none;">
+                            <i class="bi bi-clock"></i>
+                            <span>Last updated: <span id="lastUpdatedTime"></span></span>
+                        </small>
+                        <button class="btn btn-outline-primary btn-sm" onclick="refreshDashboard()" title="Refresh Data">
+                            <i class="bi bi-arrow-clockwise"></i>
+                            <span class="d-none d-sm-inline ms-1">Refresh</span>
+                        </button>
+                        <div class="text-muted dashboard-date">
+                            <i class="bi bi-calendar3"></i>
+                            <span id="currentDate"></span>
+                        </div>
+                    </div>
             </div>
 
             <!-- Stats Cards -->
@@ -89,52 +99,63 @@ include "./partials/header.php";
                 weekday: 'long', 
                 year: 'numeric', 
                 month: 'long', 
-                day: 'numeric' 
+                day: 'numeric'
             };
             document.getElementById('currentDate').textContent = now.toLocaleDateString('en-US', options);
         }
 
-        // Function to load dashboard data
+        // Function to load dashboard data dynamically
         async function loadDashboardData() {
             try {
-                // Import products data (simulating the data from products.js)
-                const products = [
-                    { id: 1, name: "Titanium Dioxide White", category: "deys", colorShade: "#FFFFFF", ciGenericName: "Titanium Dioxide", casNumber: "13463-67-7" },
-                    { id: 2, name: "Iron Oxide Red", category: "pigments", colorShade: "#CD5C5C", ciGenericName: "Iron Oxide", casNumber: "1309-37-1" },
-                    { id: 3, name: "Ultramarine Blue", category: "pigments", colorShade: "#4169E1", ciGenericName: "Ultramarine", casNumber: "57455-37-5" },
-                    { id: 4, name: "Chrome Yellow", category: "pigments", colorShade: "#FFD700", ciGenericName: "Lead Chromate", casNumber: "7758-97-6" },
-                    { id: 5, name: "Carbon Black", category: "pigments", colorShade: "#000000", ciGenericName: "Carbon Black", casNumber: "1333-86-4" },
-                    { id: 6, name: "Phthalocyanine Green", category: "deys", colorShade: "#00FF7F", ciGenericName: "Copper Phthalocyanine", casNumber: "1328-53-6" },
-                    { id: 7, name: "Cadmium Orange", category: "pigments", colorShade: "#FF8C00", ciGenericName: "Cadmium Selenide", casNumber: "1306-24-7" },
-                    { id: 8, name: "Quinacridone Violet", category: "colorants", colorShade: "#8B008B", ciGenericName: "Quinacridone", casNumber: "1047-16-1" },
-                    { id: 9, name: "Zinc Oxide White", category: "additives", colorShade: "#F8F8FF", ciGenericName: "Zinc Oxide", casNumber: "1314-13-2" },
-                    { id: 10, name: "Prussian Blue", category: "deys", colorShade: "#003153", ciGenericName: "Iron Hexacyanoferrate", casNumber: "14038-43-8" },
-                    { id: 11, name: "Vermillion Red", category: "pigments", colorShade: "#E34234", ciGenericName: "Mercury Sulfide", casNumber: "1344-48-5" },
-                    { id: 12, name: "Cobalt Blue", category: "colorants", colorShade: "#0047AB", ciGenericName: "Cobalt Aluminate", casNumber: "1345-16-0" },
-                    { id: 13, name: "Chromium Green", category: "pigments", colorShade: "#50C878", ciGenericName: "Chromium Oxide", casNumber: "1308-38-9" },
-                    { id: 14, name: "Alizarin Crimson", category: "deys", colorShade: "#E32636", ciGenericName: "Alizarin", casNumber: "72-48-0" },
-                    { id: 15, name: "Burnt Sienna", category: "colorants", colorShade: "#A0522D", ciGenericName: "Iron Oxide", casNumber: "51274-00-1" }
-                ];
+                // Show loading state
+                document.getElementById('totalProducts').textContent = '...';
+                document.getElementById('totalCategories').textContent = '...';
+                document.getElementById('categoryBreakdown').innerHTML = '<div class="text-center py-4"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div></div>';
 
-                // Calculate total products
+                // Fetch data from APIs
+                const [productsResponse, categoriesResponse] = await Promise.all([
+                    fetch('productApi.php'),
+                    fetch('categoryApi.php')
+                ]);
+
+                if (!productsResponse.ok || !categoriesResponse.ok) {
+                    throw new Error('Failed to fetch data from APIs');
+                }
+
+                const products = await productsResponse.json();
+                const categories = await categoriesResponse.json();
+
+                // Calculate totals
                 const totalProducts = products.length;
-                
-                // Calculate unique categories
-                const categories = [...new Set(products.map(product => product.category))];
                 const totalCategories = categories.length;
 
                 // Update the dashboard cards with animation
                 animateCounter('totalProducts', totalProducts);
                 animateCounter('totalCategories', totalCategories);
 
-                // Load category breakdown
+                // Load category breakdown with real data
                 loadCategoryBreakdown(products, categories);
+
+                // Show last updated time
+                const now = new Date();
+                document.getElementById('lastUpdatedTime').textContent = now.toLocaleTimeString();
+                document.getElementById('lastUpdated').style.display = 'block';
 
             } catch (error) {
                 console.error('Error loading dashboard data:', error);
-                // Fallback values
-                document.getElementById('totalProducts').textContent = '15';
-                document.getElementById('totalCategories').textContent = '4';
+                
+                // Show error state
+                document.getElementById('totalProducts').textContent = 'Error';
+                document.getElementById('totalCategories').textContent = 'Error';
+                document.getElementById('categoryBreakdown').innerHTML = `
+                    <div class="text-center py-4 text-muted">
+                        <i class="bi bi-exclamation-triangle fs-1 mb-3"></i>
+                        <p>Failed to load dashboard data</p>
+                        <button class="btn btn-outline-primary btn-sm" onclick="loadDashboardData()">
+                            <i class="bi bi-arrow-clockwise me-1"></i>Retry
+                        </button>
+                    </div>
+                `;
             }
         }
 
@@ -165,42 +186,78 @@ include "./partials/header.php";
             requestAnimationFrame(updateCounter);
         }
 
-        // Function to load category breakdown
+        // Function to load category breakdown with real data
         function loadCategoryBreakdown(products, categories) {
             const categoryBreakdown = document.getElementById('categoryBreakdown');
             
-            // Calculate products per category
+            if (categories.length === 0) {
+                categoryBreakdown.innerHTML = `
+                    <div class="text-center py-4 text-muted">
+                        <i class="bi bi-tags fs-1 mb-3"></i>
+                        <p>No categories found</p>
+                        <a href="category.php" class="btn btn-outline-primary btn-sm">
+                            <i class="bi bi-plus-circle me-1"></i>Add Category
+                        </a>
+                    </div>
+                `;
+                return;
+            }
+
+            // Calculate products per category using real data
             const categoryData = categories.map(category => {
-                const count = products.filter(product => product.category === category).length;
-                const percentage = ((count / products.length) * 100).toFixed(1);
-                return { category, count, percentage };
+                const count = products.filter(product => 
+                    product.category_id === category.category_id
+                ).length;
+                const percentage = products.length > 0 ? ((count / products.length) * 100).toFixed(1) : 0;
+                
+                return { 
+                    category_id: category.category_id,
+                    category_name: category.category_name,
+                    category_icon: category.category_icon,
+                    count, 
+                    percentage 
+                };
             });
 
             // Sort by count (descending)
             categoryData.sort((a, b) => b.count - a.count);
 
-            // Category colors
+            // Category colors mapping
             const categoryColors = {
                 'pigments': '#007bff',
-                'deys': '#28a745',
+                'dyes': '#28a745', 
                 'colorants': '#ffc107',
-                'additives': '#dc3545'
+                'additives': '#dc3545',
+                'specialty': '#6f42c1',
+                'organic': '#20c997',
+                'inorganic': '#fd7e14'
             };
+
+            // Get color by category name (fallback to default)
+            function getCategoryColor(categoryName) {
+                const name = categoryName.toLowerCase();
+                return categoryColors[name] || '#6c757d';
+            }
 
             // Check if mobile view
             const isMobile = window.innerWidth <= 768;
 
             // Generate HTML based on screen size
             const html = categoryData.map(item => {
+                const color = getCategoryColor(item.category_name);
+                const iconClass = item.category_icon || 'bi-tag';
+                
                 if (isMobile) {
                     // Mobile layout - stacked cards
                     return `
                         <div class="category-item-mobile d-flex align-items-center justify-content-between mb-3 p-3 border rounded">
                             <div class="category-info-mobile d-flex align-items-center">
-                                <div class="category-color-indicator-mobile me-3" 
-                                     style="width: 24px; height: 24px; background-color: ${categoryColors[item.category] || '#6c757d'}; border-radius: 50%; flex-shrink: 0;"></div>
+                                <div class="category-color-indicator-mobile me-3 d-flex align-items-center justify-content-center" 
+                                     style="width: 40px; height: 40px; background-color: ${color}; border-radius: 50%; flex-shrink: 0;">
+                                    <i class="${iconClass} text-white"></i>
+                                </div>
                                 <div>
-                                    <div class="category-name-mobile fw-semibold text-capitalize">${item.category}</div>
+                                    <div class="category-name-mobile fw-semibold">${item.category_name}</div>
                                     <small class="category-count-mobile text-muted">${item.count} products</small>
                                 </div>
                             </div>
@@ -208,7 +265,7 @@ include "./partials/header.php";
                                 <div class="category-percentage-mobile fw-bold mb-1">${item.percentage}%</div>
                                 <div class="progress category-progress-mobile" style="width: 80px; height: 8px;">
                                     <div class="progress-bar" 
-                                         style="width: ${item.percentage}%; background-color: ${categoryColors[item.category] || '#6c757d'};"
+                                         style="width: ${item.percentage}%; background-color: ${color};"
                                          role="progressbar"></div>
                                 </div>
                             </div>
@@ -219,10 +276,12 @@ include "./partials/header.php";
                     return `
                         <div class="d-flex align-items-center justify-content-between mb-3">
                             <div class="d-flex align-items-center">
-                                <div class="category-color-indicator me-3" 
-                                     style="width: 20px; height: 20px; background-color: ${categoryColors[item.category] || '#6c757d'}; border-radius: 50%;"></div>
+                                <div class="category-color-indicator me-3 d-flex align-items-center justify-content-center" 
+                                     style="width: 32px; height: 32px; background-color: ${color}; border-radius: 50%;">
+                                    <i class="${iconClass} text-white" style="font-size: 0.875rem;"></i>
+                                </div>
                                 <div>
-                                    <div class="fw-medium text-capitalize">${item.category}</div>
+                                    <div class="fw-medium">${item.category_name}</div>
                                     <small class="text-muted">${item.count} products</small>
                                 </div>
                             </div>
@@ -230,7 +289,7 @@ include "./partials/header.php";
                                 <div class="fw-bold">${item.percentage}%</div>
                                 <div class="progress mt-1" style="width: 100px; height: 6px;">
                                     <div class="progress-bar" 
-                                         style="width: ${item.percentage}%; background-color: ${categoryColors[item.category] || '#6c757d'};"
+                                         style="width: ${item.percentage}%; background-color: ${color};"
                                          role="progressbar"></div>
                                 </div>
                             </div>
@@ -244,27 +303,16 @@ include "./partials/header.php";
 
         // Function to handle window resize
         function handleResize() {
-            // Reload category breakdown on resize to switch between mobile/desktop layouts
-            const products = [
-                { id: 1, name: "Titanium Dioxide White", category: "deys", colorShade: "#FFFFFF", ciGenericName: "Titanium Dioxide", casNumber: "13463-67-7" },
-                { id: 2, name: "Iron Oxide Red", category: "pigments", colorShade: "#CD5C5C", ciGenericName: "Iron Oxide", casNumber: "1309-37-1" },
-                { id: 3, name: "Ultramarine Blue", category: "pigments", colorShade: "#4169E1", ciGenericName: "Ultramarine", casNumber: "57455-37-5" },
-                { id: 4, name: "Chrome Yellow", category: "pigments", colorShade: "#FFD700", ciGenericName: "Lead Chromate", casNumber: "7758-97-6" },
-                { id: 5, name: "Carbon Black", category: "pigments", colorShade: "#000000", ciGenericName: "Carbon Black", casNumber: "1333-86-4" },
-                { id: 6, name: "Phthalocyanine Green", category: "deys", colorShade: "#00FF7F", ciGenericName: "Copper Phthalocyanine", casNumber: "1328-53-6" },
-                { id: 7, name: "Cadmium Orange", category: "pigments", colorShade: "#FF8C00", ciGenericName: "Cadmium Selenide", casNumber: "1306-24-7" },
-                { id: 8, name: "Quinacridone Violet", category: "colorants", colorShade: "#8B008B", ciGenericName: "Quinacridone", casNumber: "1047-16-1" },
-                { id: 9, name: "Zinc Oxide White", category: "additives", colorShade: "#F8F8FF", ciGenericName: "Zinc Oxide", casNumber: "1314-13-2" },
-                { id: 10, name: "Prussian Blue", category: "deys", colorShade: "#003153", ciGenericName: "Iron Hexacyanoferrate", casNumber: "14038-43-8" },
-                { id: 11, name: "Vermillion Red", category: "pigments", colorShade: "#E34234", ciGenericName: "Mercury Sulfide", casNumber: "1344-48-5" },
-                { id: 12, name: "Cobalt Blue", category: "colorants", colorShade: "#0047AB", ciGenericName: "Cobalt Aluminate", casNumber: "1345-16-0" },
-                { id: 13, name: "Chromium Green", category: "pigments", colorShade: "#50C878", ciGenericName: "Chromium Oxide", casNumber: "1308-38-9" },
-                { id: 14, name: "Alizarin Crimson", category: "deys", colorShade: "#E32636", ciGenericName: "Alizarin", casNumber: "72-48-0" },
-                { id: 15, name: "Burnt Sienna", category: "colorants", colorShade: "#A0522D", ciGenericName: "Iron Oxide", casNumber: "51274-00-1" }
-            ];
-            
-            const categories = [...new Set(products.map(product => product.category))];
-            loadCategoryBreakdown(products, categories);
+            // Only reload if we have data
+            if (document.getElementById('totalProducts').textContent !== '...' && 
+                document.getElementById('totalProducts').textContent !== 'Error') {
+                loadDashboardData();
+            }
+        }
+
+        // Function to refresh dashboard data
+        function refreshDashboard() {
+            loadDashboardData();
         }
 
         // Initialize dashboard when DOM is loaded
@@ -278,7 +326,13 @@ include "./partials/header.php";
                 clearTimeout(resizeTimeout);
                 resizeTimeout = setTimeout(handleResize, 250);
             });
+
+            // Auto-refresh every 5 minutes
+            setInterval(refreshDashboard, 300000);
         });
+
+        // Expose refresh function globally for manual refresh
+        window.refreshDashboard = refreshDashboard;
     </script>
 
 <?php 
